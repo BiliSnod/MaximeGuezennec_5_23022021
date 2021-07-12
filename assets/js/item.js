@@ -44,8 +44,8 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         for (const color of colors) {  // defining a loop iterating "colors" 
             // console.log(color);
             const teddyColorOption = document.createElement("option");  // defining an <option> element for each color
-            teddyColorOption.setAttribute("value", teddy.colors[color]);  // filling the value attribute with the color [UNDIFINED]
-            teddyColorOption.textContent = teddy.colors[1];  // filling the <option> element with the color [WORKS WITHOUT THE LOOP]
+            teddyColorOption.setAttribute("value", color);  // filling the value attribute with the color
+            teddyColorOption.textContent = color;  // filling the <option> element with the color
             teddyColorSelect.appendChild(teddyColorOption);  // adding the <option> element inside the <select> element
         }
         /* ------ */
@@ -70,7 +70,7 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         teddyPrice.setAttribute("class", "price");  // setting and ID for the <input>
         teddyPrice.textContent = (teddy.price / 100) + ",00€";  // filling the paragraph with the price displayed in euros
         teddyItem.appendChild(teddyPrice);  // adding the price inside the <article> element
-
+        
         const priceQuantity = document.getElementById("quantity");  // modifying the displayed price when quantity change
         priceQuantity.addEventListener('change', (event) => {  // placing EventListener on the "quantity" input
             const totalPriceQuantity = (teddy.price * event.target.value) / 100;  // calculating the price with a new quantity
