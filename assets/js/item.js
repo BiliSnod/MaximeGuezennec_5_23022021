@@ -82,7 +82,13 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         document.getElementById("item");  // targeting the "item" <section>
         
         const toCart = document.createElement("div");  // defining an <div> element
+        toCart.setAttribute("class", "validation"); // defining a class attribute to the <div> element
         item.appendChild(toCart);  // adding the <div> inside the "item" <section>
+
+        /*
+        const messageToCart = document.createElement("p");  // defining a <p> tag for validation message : confirmationToCart()
+        toCart.appendChild(messageToCart);  // adding the <p> inside the "item" <section>
+        */
 
         const buttonToCart = document.createElement("button");  // defining a <button> element
         buttonToCart.setAttribute("id", "btn__cart");  // defining an ID for the <button>
@@ -104,7 +110,32 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
                 sendItemId: teddy._id,  // sending the item ID
                 sendQuantity: selectQuantityValue  // sending the selected quantity
             };
-            console.log(sendingInformations)
+    
+            let itemsInStorage = JSON.parse(localStorage.getItem("items"));  // variable where keys and values are stored, from datas in LocalStorage (parsed from JSON to JS)
+            // console.log(itemsInStorage);
+
+            const confirmationToCart = () => {
+                window.alert("Votre séléction a été ajoutée au panier");  // displaying an alert box when items are added to cart
+                /* --------- 
+                document.querySelector(".validation");
+                messageToCart.textContent = "Votre séléction a été ajoutée au panier";
+                */
+            };
+    
+            if (itemsInStorage) {  // defining what to do when there is existing data in LocalStorage
+                // need solution to replace object if sendItemId is already existing
+                // itemsInStorage.pop();  // delete last added informations
+                itemsInStorage.push(sendingInformations);  // adding informations to send in the array
+                localStorage.setItem("items", JSON.stringify(itemsInStorage));  // sending the informations in LocalStorage, coverting JS to JSON
+                console.log(itemsInStorage);
+                confirmationToCart();
+            } else {  // defining what to do when LocalStorage is empty
+                itemsInStorage = [];  // creating an empty array to store informations to send
+                itemsInStorage.push(sendingInformations);  // adding informations to send in the array
+                localStorage.setItem("items", JSON.stringify(itemsInStorage));  // sending the informations in LocalStorage, coverting JS to JSON
+                console.log(itemsInStorage);
+                confirmationToCart();
+            }
         });
         /* ------ */
     })
