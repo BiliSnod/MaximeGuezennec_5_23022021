@@ -95,7 +95,6 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         buttonToCart.setAttribute("name", "add-to-cart");  // defining a name for the <button>
         buttonToCart.setAttribute("type", "submit");  // defining the "submit" type for the <button>
         buttonToCart.textContent = "Ajouter au panier";  // filling the <button> with text
-
         toCart.appendChild(buttonToCart);  // adding the <button> to the <div> tag
 
 
@@ -107,33 +106,39 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
             const selectQuantityValue = selectQuantity.value;  // getting the selector's value
 
             const sendingInformations = {  // defining an object with the informations to send to cart
-                sendItemId: teddy._id,  // sending the item ID
-                sendQuantity: selectQuantityValue  // sending the selected quantity
+                sentItemName: teddy.name,  // sending the item name
+                sentItemUrl: teddy.imageUrl,  // sending the item picture URL
+                sentItemPrice: (teddy.price / 100) * selectQuantityValue,  // sending the item price
+                sentItemId: teddy._id,  // sending the item ID
+                sentItemQuantity: selectQuantityValue  // sending the selected quantity
             };
     
             let itemsInStorage = JSON.parse(localStorage.getItem("items"));  // variable where keys and values are stored, from datas in LocalStorage (parsed from JSON to JS)
             // console.log(itemsInStorage);
 
+            const addItemLocalStorage = () => {
+                itemsInStorage.push(sendingInformations);  // adding the object customer choices in the array destined to LocalStorage
+                localStorage.setItem("items", JSON.stringify(itemsInStorage));  // sending the informations in "item" key of LocalStorage, converting JS to JSON
+            }
+
             const confirmationToCart = () => {
-                window.alert("Votre séléction a été ajoutée au panier");  // displaying an alert box when items are added to cart
+                window.alert("Votre sélection a été ajoutée au panier");  // displaying an alert box when items are added to cart
                 /* --------- 
                 document.querySelector(".validation");
-                messageToCart.textContent = "Votre séléction a été ajoutée au panier";
+                messageToCart.textContent = "Votre sélection a été ajoutée au panier";
                 */
             };
     
             if (itemsInStorage) {  // defining what to do when there is existing data in LocalStorage
-                // need solution to replace object if sendItemId is already existing
+                console.log("Items in storage", itemsInStorage)
+                
+                // if (itemsInStorage.sentItemId === teddy._id) { // works only when existing data = replace existing values
                 // itemsInStorage.pop();  // delete last added informations
-                itemsInStorage.push(sendingInformations);  // adding informations to send in the array
-                localStorage.setItem("items", JSON.stringify(itemsInStorage));  // sending the informations in LocalStorage, coverting JS to JSON
-                console.log(itemsInStorage);
+                addItemLocalStorage();
                 confirmationToCart();
             } else {  // defining what to do when LocalStorage is empty
                 itemsInStorage = [];  // creating an empty array to store informations to send
-                itemsInStorage.push(sendingInformations);  // adding informations to send in the array
-                localStorage.setItem("items", JSON.stringify(itemsInStorage));  // sending the informations in LocalStorage, coverting JS to JSON
-                console.log(itemsInStorage);
+                addItemLocalStorage();
                 confirmationToCart();
             }
         });
