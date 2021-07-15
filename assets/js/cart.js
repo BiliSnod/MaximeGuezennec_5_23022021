@@ -37,6 +37,10 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
         itemInCartImage.setAttribute("height", 80);
         returnToItemPage.appendChild(itemInCartImage);
 
+        const itemColorOption = document.createElement("p");  // displaying item quantity
+        itemColorOption.textContent = `Couleur : ${itemInStorage.sentItemColor}`;
+        itemInCart.appendChild(itemColorOption);
+
         const itemInCartQuantity = document.createElement("p");  // displaying item quantity
         itemInCartQuantity.textContent = `Quantité : ${itemInStorage.sentItemQuantity}`;
         itemInCart.appendChild(itemInCartQuantity);
@@ -252,8 +256,8 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
         console.log(document.querySelector("#input__first-name").value);
 
         const addCustomerLocalStorage = () => {
-            customerInStorage.push(sendingCustomerData);  // adding the object customer choices in the array destined to LocalStorage
-            localStorage.setItem("customer", JSON.stringify(customerInStorage));  // sending the informations in "item" key of LocalStorage, converting JS to JSON
+            customerInStorage.push(sendingCustomerData);  // adding the customer object in the array destined to LocalStorage
+            localStorage.setItem("customer", JSON.stringify(customerInStorage));  // sending the informations in "customer" key of LocalStorage, converting JS to JSON
         }
 
 

@@ -6,9 +6,11 @@ fetch("http://localhost:3000/api/teddies")  // getting the API's data
             
             const teddyLink = document.createElement("a");  // defining an <a> tag for each item
             teddyLink.setAttribute("href", `pages/item.html?id=${teddy._id}`);  // filling the href attribute with the item specific URL
+            teddyLink.classList.add("link-dark");  // adding class attribute (styling)
             allItems.appendChild(teddyLink);  // adding the link inside the "items" <section> element
             
             const teddyItem = document.createElement("article");  // defining an <article> element for each item
+            teddyItem.classList.add("m-2", "p-1", "p-sm-3", "border", "border-5", "rounded-3", "bg-light", "bg-gradient");  // adding class attribute (styling)
             teddyLink.appendChild(teddyItem);  // adding the <article> element inside the <a> tag
 
 

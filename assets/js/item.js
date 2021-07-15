@@ -13,19 +13,22 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
 
 
         /* --- Item title [o] --- */
+        const teddyTitleMain = document.querySelector("#title");
         const teddyTitle = document.createElement("h1"); // defining a <h1> element for the item
         teddyTitle.textContent = `Commandez ${teddy.name}, parmi nos peluches faites-main`;  // filling the <h1> element with the item name
-        teddyItem.appendChild(teddyTitle);  // adding the title inside the <article> element
+        teddyTitle.classList.add("text-center", "text-light");  // adding class attribute (styling)
+        teddyTitleMain.appendChild(teddyTitle);  // adding the title inside the <article> element
         /* --- Item title [x] --- */
 
 
         /* --- Item description [o] --- */
         const teddyFigure = document.createElement("figure");
+        teddyItem.classList.add("m-2", "p-1", "p-sm-3", "border", "border-5", "rounded-3", "bg-light", "bg-gradient");  // adding class attribute (styling)
         teddyItem.appendChild(teddyFigure);  // adding the <figure> element inside the "item" <section>
         
         const teddyUrl = document.createElement("img");  // defining an <img> element for each item
         teddyUrl.setAttribute("src", teddy.imageUrl);  // filling the "src" attribute with the image URL
-        teddyUrl.setAttribute("height", "200");  // TEMPORARY
+        teddyUrl.setAttribute("height", "320");  // TEMPORARY
         teddyUrl.setAttribute("alt", `Peluche ${teddy.name}`);  // filling the alt attribute with a description
         teddyFigure.appendChild(teddyUrl);  // adding the image inside the <article> element
         
@@ -116,7 +119,7 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
                 sentItemUrl: teddy.imageUrl,  // sending the item picture URL
                 sentItemPrice: (teddy.price / 100) * selectQuantityValue,  // sending the item price
                 sentItemId: teddy._id,  // sending the item ID
-                sentIteColor: selectColorValue,  // sending the item color option
+                sentItemColor: selectColorValue,  // sending the item color option
                 sentItemQuantity: selectQuantityValue  // sending the selected quantity
             };
             /* --- Object model for LocalStorage [x] --- */
