@@ -12,14 +12,14 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         item.appendChild(teddyItem);  // adding the <article> element inside the "item" <section>
 
 
-        /* --- Item title --- */
+        /* --- Item title [o] --- */
         const teddyTitle = document.createElement("h1"); // defining a <h1> element for the item
         teddyTitle.textContent = `Commandez ${teddy.name}, parmi nos peluches faites-main`;  // filling the <h1> element with the item name
         teddyItem.appendChild(teddyTitle);  // adding the title inside the <article> element
-        /* ------ */
+        /* --- Item title [x] --- */
 
 
-        /* --- Item description --- */
+        /* --- Item description [o] --- */
         const teddyFigure = document.createElement("figure");
         teddyItem.appendChild(teddyFigure);  // adding the <figure> element inside the "item" <section>
         
@@ -32,10 +32,10 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         const teddyDescription = document.createElement("figcaption");  // defining an <figcaption> element for the item
         teddyDescription.textContent = teddy.description;  // filling the <figcaption> element with the description text
         teddyFigure.appendChild(teddyDescription);  // adding the <figcaption> in the <figure> element
-        /* ------ */
+        /* --- Item description [x] --- */
 
 
-        /* --- Item color --- */
+        /* --- Item color [o] --- */
         const teddyColorSelect = document.createElement("select");  // defining a <select> element to choose between item colors
         teddyColorSelect.setAttribute("id", "select-color");  // setting and ID for the <input>
         teddyColorSelect.setAttribute("name", "select-color");  // setting and ID for the <input>
@@ -50,10 +50,10 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
             teddyColorOption.textContent = color;  // filling the <option> element with the color
             teddyColorSelect.appendChild(teddyColorOption);  // adding the <option> element inside the <select> element
         }
-        /* ------ */
+        /* --- Item color [x] --- */
 
 
-        /* --- Item quantity --- */
+        /* --- Item quantity [o] --- */
         const teddyQuantitySelect = document.createElement("select");  // defining a <select> element for quantity
         teddyQuantitySelect.setAttribute("id", "select-quantity");  // setting and ID for the <input>
         teddyQuantitySelect.setAttribute("name", "select-quantity");  // setting and ID for the <input>
@@ -66,19 +66,19 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
             teddyQuantityNumber.textContent = quantity;  // filling the <option> element with the quantity
             teddyQuantitySelect.appendChild(teddyQuantityNumber);  // adding the <option> inside the <select> element
         }
-        /* ------ */
+        /* --- Item quantity [x] --- */
 
             
-        /* --- Item price --- */
+        /* --- Item price [o] --- */
         const teddyPrice = document.createElement("p");  // defining a <p> element for each item
         teddyPrice.textContent = (teddy.price / 100) + ",00€";  // filling the paragraph with the price displayed in euros
         teddyItem.appendChild(teddyPrice);  // adding the price inside the <article> element
-        /* ------ */
+        /* --- Item price [x] --- */
         
 
 
 
-        /* --- Add to cart --- */
+        /* --------- Add to cart [o] --------- */
         document.getElementById("item");  // targeting the "item" <section>
         
         const toCart = document.createElement("div");  // defining an <div> element
@@ -98,28 +98,37 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
         toCart.appendChild(buttonToCart);  // adding the <button> to the <div> tag
 
 
+        /* --- Sending informations to LocalStorage [o] --- */
         const sendToCart = document.querySelector("#btn__cart");  // targeting the <button> sending the informations to cart 
         sendToCart.addEventListener("click", (event) => {  // configuring the events when the button is clicked
             event.preventDefault();  // preventing default behavior of the <button>
             
+            const selectColor = document.querySelector("#select-color");  // targeting the <select> element for color option
+            const selectColorValue = selectColor.value;  // getting the selector's value
+            
             const selectQuantity = document.querySelector("#select-quantity");  // targeting the <select> element for quantity
             const selectQuantityValue = selectQuantity.value;  // getting the selector's value
 
-            const sendingInformations = {  // defining an object with the informations to send to cart
+
+            /* --- Object model for LocalStorage [o] --- */
+            const sendingItemInformations = {  // defining an object with the informations to send to cart
                 sentItemName: teddy.name,  // sending the item name
                 sentItemUrl: teddy.imageUrl,  // sending the item picture URL
                 sentItemPrice: (teddy.price / 100) * selectQuantityValue,  // sending the item price
                 sentItemId: teddy._id,  // sending the item ID
+                sentIteColor: selectColorValue,  // sending the item color option
                 sentItemQuantity: selectQuantityValue  // sending the selected quantity
             };
+            /* --- Object model for LocalStorage [x] --- */
     
-            let itemsInStorage = JSON.parse(localStorage.getItem("items"));  // variable where keys and values are stored, from datas in LocalStorage (parsed from JSON to JS)
+            let itemsInStorage = JSON.parse(localStorage.getItem("items"));  // retrieve object from data in LocalStorage (parsed from JSON to JS)
             // console.log(itemsInStorage);
 
             const addItemLocalStorage = () => {
-                itemsInStorage.push(sendingInformations);  // adding the object customer choices in the array destined to LocalStorage
+                itemsInStorage.push(sendingItemInformations);  // adding the object customer choices in the array destined to LocalStorage
                 localStorage.setItem("items", JSON.stringify(itemsInStorage));  // sending the informations in "item" key of LocalStorage, converting JS to JSON
             }
+
 
             const confirmationToCart = () => {
                 window.alert("Votre sélection a été ajoutée au panier");  // displaying an alert box when items are added to cart
@@ -128,12 +137,13 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
                 messageToCart.textContent = "Votre sélection a été ajoutée au panier";
                 */
             };
+
     
+            /* --- Checking data in LocalStorage [o] --- */
             if (itemsInStorage) {  // defining what to do when there is existing data in LocalStorage
                 console.log("Items in storage", itemsInStorage)
-                
                 // if (itemsInStorage.sentItemId === teddy._id) { // works only when existing data = replace existing values
-                // itemsInStorage.pop();  // delete last added informations
+                // itemsInStorage.pop();  // delete last added informations (test)
                 addItemLocalStorage();
                 confirmationToCart();
             } else {  // defining what to do when LocalStorage is empty
@@ -141,8 +151,10 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
                 addItemLocalStorage();
                 confirmationToCart();
             }
+            /* --- Checking data in LocalStorage [x] --- */
         });
-        /* ------ */
+        /* --- Sending informations to LocalStorage [x] --- */
+        /* --------- Add to cart [x] --------- */
     })
     .catch(error => document.getElementById("item").innerHTML = "<p>Désolé, aucun article n'est disponible.</p>");  // message displayed when a problem occur
 
