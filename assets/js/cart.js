@@ -51,20 +51,19 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
         const itemInCartDelete = document.createElement("button");  // defining a button tu delete item from cart
         itemInCartDelete.setAttribute("class", "btn__delete-item");
-        itemInCartDelete.setAttribute("name", "delete-item"); 
+        itemInCartDelete.setAttribute("name", "delete-item");
         itemInCartDelete.setAttribute("type", "button");
         itemInCartDelete.textContent = "Supprimer";
         itemInCart.appendChild(itemInCartDelete);
-        /*
-        deleteItem = document.querySelector(".btn__delete-item");
-        deleteItem.addEventListener("click", (event) =>{  // what will happen on <button> click
-            event.preventDefault();  // preventing normal button behavior
-            const itemToDelete = itemInStorage.sentItemId;
-            itemInCart.filter(element => element.sentItemId !== itemToDelete); ///splice
-            window.alert("L'article a été retiré du panier.");
-            location.reload();
-        });
-        */
+
+        const deleteItems = document.querySelectorAll(".btn__delete-item");
+        for (const deleteItem of deleteItems) {  // LENGTH ????
+            deleteItem.addEventListener("click", (event) =>{  // what will happen on <button> click
+                event.preventDefault();  // preventing normal button behavior
+                const itemToDelete = itemInStorage.sentItemId;
+                console.log("itemToDelete", itemToDelete)
+            });
+        };
         /* --- Item in cart structure [x] --- */
 
         /* --- Calculating sum of price for each item regarding to its quantity [o] --- */
@@ -72,6 +71,18 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
         allPriceSums.push(sumOfItemPrice);
         /* --- Calculating sum of price for each item regarding to its quantity [x] --- */
     }
+    /*
+    deleteItem = document.querySelectorAll(".btn__delete-item");
+    deleteItem.addEventListener("click", (event) =>{  // what will happen on <button> click
+        event.preventDefault();  // preventing normal button behavior
+        const itemToDelete = itemInStorage.sentItemId;
+        itemInCart.filter(element => element.sentItemId !== itemToDelete); ///splice
+        window.alert("L'article a été retiré du panier.");
+        location.reload();
+    });
+    */
+
+
     /* --- Calculating cart total price [o] --- */
     const totalCartPrice = allPriceSums.reduce(function (accumulator, currentValue) {
         return accumulator + currentValue
@@ -233,15 +244,15 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
     confirmCart = document.querySelector("#btn__confirm-cart");
     confirmCart.addEventListener("click", (event) =>{
 
-        /* --- Getting the fields values [o] --- */
+        /* --- Getting the fields values [o] --- /
         const selectCustomerFirstName = document.querySelector("#input__first-name").value;
         const selectCustomerLastName = document.querySelector("#input__last-name").value;
         const selectCustomerAdress = document.querySelector("#input__adress").value;
         const selectCustomerCity = document.querySelector("#input__city").value;
         const selectCustomerMail = document.querySelector("#input__mail").value;
-        /* --- Getting the fields values [x] --- */
+        /* --- Getting the fields values [x] --- /
 
-        /* --- Object model for customer in LocalStorage [o] --- */
+        /* --- Object model for customer in LocalStorage [o] --- /
         const sendingCustomerData = {  // defining an object with the informations to send to cart
             sentFirstName: selectCustomerFirstName,  // sending the item name
             sentLastName: selectCustomerLastName,  // sending the item picture URL
@@ -249,16 +260,122 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
             sentCity: selectCustomerCity,  // sending the item ID
             sentMail: selectCustomerMail  // sending the selected quantity
         };
-        /* --- Object model for customer in LocalStorage [x] --- */
+        /* --- Object model for customer in LocalStorage [x] --- /
+        
+        /* --- Object model for "contact" in LocalStorage [o] --- */
+        const sendingCustomerData = {  // defining an object with the informations to send to cart
+            sentFirstName: document.querySelector("#input__first-name").value,  // sending the item name
+            sentLastName: document.querySelector("#input__last-name").value,  // sending the item picture URL
+            sentAdress: document.querySelector("#input__adress").value,  // sending the item price
+            sentCity: document.querySelector("#input__city").value,  // sending the item ID
+            sentMail: document.querySelector("#input__mail").value  // sending the selected quantity
+        };
+        // console.log("sendingCustomerData", sendingCustomerData)
+        /* --- Object model for "contact" in LocalStorage [x] --- */
+
+        
+        /* --- Checking validity of data entered in the form [o] --- */
+
+        /*
+        const conditionInputs = (field) => {  // declaring a function with RegEx concerning classic <input> to use for same conditions
+            return /^[a-zA-Z-]{3,30}$/.test(field);  // allowing letter from A to Z in lowercase and uppercase, from 3 characters to 30, and dash
+        }
+        */
+
+        function checkFirstName() {
+            const valueFirstName = sendingCustomerData.sentFirstName;
+            // console.log("sendingCustomerData.sentFirstName", sendingCustomerData.sentFirstName)
+            if (/^[a-zA-Z-]{3,30}$/.test(valueFirstName)) {  // "if (conditionInputs(valueFirstName))" pour appeler conditionInputs(field)
+                console.log("OK");
+                return true;
+            } else {
+                console.log("KO");
+                alert("Présence de caractères non-valides = checkFirstName");
+                return false;
+            };
+        };
+
+        function checkLastName() {
+            const valueLastName = sendingCustomerData.sentLastName;
+            if (/^[a-zA-Z-\s]{3,30}$/.test(valueLastName)) {
+                return true;
+            } else {
+                alert("Présence de caractères non-valides = checkLastName");
+                return false;
+            };
+        };
+
+        function checkAdress() {
+            const valueAdress = sendingCustomerData.sentAdress;
+            if (/^[a-zA-Z0-9.-\s]{10,300}$/.test(valueAdress)) {
+                return true;
+            } else {
+                alert("Présence de caractères non-valides = checkAdress");
+                return false;
+            };
+        };
+
+        function checkCity() {
+            const valueCity = sendingCustomerData.sentCity;
+            if (/^[a-zA-Z-]{2,40}$/.test(valueCity)) {
+                return true;
+            } else {
+                alert("Présence de caractères non-valides = checkCity");
+                return false;
+            };
+        };
+
+        function checkMail() {
+            const valueMail = sendingCustomerData.sentMail;
+            if (/^[a-zA-Z0-9_\.-]{3,40}@[a-zA-Z0-9-]{2,10}\.[a-zA-Z]{2,4}$/.test(valueMail)) {  // alternative ? ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
+                return true;
+            } else {
+                alert("Présence de caractères non-valides = checkMail");
+                return false;
+            };
+        };
 
 
-        let customerInStorage = JSON.parse(localStorage.getItem("customer"));  // retrieve object from data in LocalStorage (parsed from JSON to JS)
-        console.log(document.querySelector("#input__first-name").value);
+
+        /* --- Checking validity of data entered in the form [x] --- */
+
+
+        //let customerInStorage = JSON.parse(localStorage.getItem("contact"));  // retrieve object from data in LocalStorage (parsed from JSON to JS)
+        // console.log("document.querySelector(...).value", document.querySelector("#input__first-name").value);
+
+        /* --- Required conditions to accept customer form data --- */
+        if (checkFirstName() && checkLastName() && checkAdress() && checkCity() && checkMail()) {
+            event.preventDefault();
+            localStorage.setItem("contact", JSON.stringify(sendingCustomerData));
+            console.log("sendingCustomerData", sendingCustomerData);
+        } else {
+            event.preventDefault();
+            alert("Erreur dans le formulaire à corriger");
+        }
+        console.log("checkFirstName", checkFirstName());
+        console.log("checkLastName", checkLastName());
+        console.log("checkAdress", checkAdress());
+        console.log("checkCity", checkCity());
+        console.log("checkMail", checkMail());
+        /* --- Required conditions to accept customer form data --- */
+
+
+        /* --- Creating an object to send with POST [o] --- */
+        const postData = {
+            contact: sendingCustomerData,  // form content
+            products: itemsInStorage  // items selected
+        }
+        // console.log("postData", postData);
+        /* --- Creating an object to send with POST [x] --- */
+
+        /*
 
         const addCustomerLocalStorage = () => {
-            customerInStorage.push(sendingCustomerData);  // adding the customer object in the array destined to LocalStorage
-            localStorage.setItem("customer", JSON.stringify(customerInStorage));  // sending the informations in "customer" key of LocalStorage, converting JS to JSON
+            customerInStorage.push(sendingCustomerData);  // adding the "contact" object in the array destined to LocalStorage
+            localStorage.setItem("contact", JSON.stringify(customerInStorage));  // sending the informations in "contact" key of LocalStorage, converting JS to JSON
         }
+        */
+
 
 
         /*
@@ -267,18 +384,18 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
         };
         */
 
-        /* --- Checking "customer" data in LocalStorage [o] --- */
+        /* --- Checking "customer" data in LocalStorage [o] --- /
         if (customerInStorage) {  // defining what to do when there is existing data in LocalStorage
             // console.log("Customer in storage", customerInStorage)
             customerInStorage.length = 0;  // delete existing objects in LocalStorage "customer" array (search other solution ?)
             addCustomerLocalStorage();
-            cartValidation();
+            // cartValidation();
         } else {  // defining what to do when LocalStorage is empty
             customerInStorage = [];  // creating an empty array to store informations to send
             addCustomerLocalStorage();
-            cartValidation();
+            // cartValidation();
         }
-        /* --- Checking "customer" data in LocalStorage [x] --- */
+        / --- Checking "customer" data in LocalStorage [x] --- */
     });
     /* --- Sending customer informations to LocalStorage [x] --- */
     /* --- Cart validation [x] --- */

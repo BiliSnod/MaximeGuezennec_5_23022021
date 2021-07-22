@@ -102,8 +102,8 @@ fetch(`http://localhost:3000/api/teddies/${itemId}`)
 
 
         /* --- Sending informations to LocalStorage [o] --- */
-        const sendToCart = document.querySelector("#btn__cart");  // targeting the <button> sending the informations to cart 
-        sendToCart.addEventListener("click", (event) => {  // configuring the events when the button is clicked
+        // const sendToCart = document.querySelector("#btn__cart");  // targeting the <button> sending the informations to cart // ALREADY CALLED
+        buttonToCart.addEventListener("click", (event) => {  // configuring the events when the button is clicked
             event.preventDefault();  // preventing default behavior of the <button>
             
             const selectColor = document.querySelector("#select-color");  // targeting the <select> element for color option
