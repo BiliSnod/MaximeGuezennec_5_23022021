@@ -142,7 +142,7 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
     const formFirstNameLabel = document.createElement("label");
     formFirstNameLabel.setAttribute("for", "input__first-name");
-    formFirstNameLabel.innerHTML = "Prénom <b>(requis)</b> :";
+    formFirstNameLabel.innerHTML = "Prénom <b>(requis)</b> <span class=\"input__first-name--error\"></span> :";
     formFirstNameDiv.appendChild(formFirstNameLabel);
 
     const formFirstNameInput = document.createElement("input");
@@ -160,7 +160,7 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
     const formLastNameLabel = document.createElement("label");
     formLastNameLabel.setAttribute("for", "input__last-name");
-    formLastNameLabel.innerHTML = "Nom <b>(requis)</b> :";
+    formLastNameLabel.innerHTML = "Nom <b>(requis)</b> <span class=\"input__last-name--error\"></span> :";
     formLastNameDiv.appendChild(formLastNameLabel);
 
     const formLastNameInput = document.createElement("input");
@@ -178,15 +178,14 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
     const formAdressLabel = document.createElement("label");
     formAdressLabel.setAttribute("for", "input__adress");
-    formAdressLabel.innerHTML = "Adresse <b>(requis)</b> :";
+    formAdressLabel.innerHTML = "Adresse <b>(requis)</b> <span class=\"input__adress--error\"></span> :";
     formAdressDiv.appendChild(formAdressLabel);
 
-    const formAdressInput = document.createElement("textarea");
+    const formAdressInput = document.createElement("input");
+    formAdressInput.setAttribute("type", "text");
     formAdressInput.setAttribute("id", "input__adress");
     formAdressInput.setAttribute("name", "adress");
     formAdressInput.setAttribute("maxlength", 120);
-    formAdressInput.setAttribute("rows", 4);
-    formAdressInput.setAttribute("cols", 40);
     formAdressInput.required = true;
     formAdressDiv.appendChild(formAdressInput);
     /* Adress [x] */
@@ -197,7 +196,7 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
     const formCityLabel = document.createElement("label");
     formCityLabel.setAttribute("for", "input__city");
-    formCityLabel.innerHTML = "Ville <b>(requis)</b> :";
+    formCityLabel.innerHTML = "Ville <b>(requis)</b> <span class=\"input__city--error\"></span> :";
     formCityDiv.appendChild(formCityLabel);
 
     const formCityInput = document.createElement("input");
@@ -215,7 +214,7 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
     const formMailLabel = document.createElement("label");
     formMailLabel.setAttribute("for", "input__mail");
-    formMailLabel.innerHTML = "E-mail <b>(requis)</b> :";
+    formMailLabel.innerHTML = "E-mail <b>(requis)</b> <span class=\"input__mail--error\"></span> :";
     formMailDiv.appendChild(formMailLabel);
 
     const formMailInput = document.createElement("input");
@@ -232,10 +231,15 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
     const confirmCartDiv = document.createElement("div");
     formField.appendChild(confirmCartDiv);
 
+    const problemCartButton = document.createElement("p"); // defining a <button> element to confirm cart
+    problemCartButton.setAttribute("id", "cart-invalid");
+    confirmCartDiv.appendChild(problemCartButton);
+
     const confirmCartButton = document.createElement("button"); // defining a <button> element to confirm cart
     confirmCartButton.setAttribute("id", "btn__confirm-cart");
     confirmCartButton.setAttribute("name", "confirm-cart");
     confirmCartButton.setAttribute("type", "submit");
+    // confirmCartButton.disabled = true;  // disabling the button by default
     confirmCartButton.textContent = "Valider mon panier";
     confirmCartDiv.appendChild(confirmCartButton);
 
@@ -254,21 +258,21 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
         /* --- Object model for customer in LocalStorage [o] --- /
         const sendingCustomerData = {  // defining an object with the informations to send to cart
-            sentFirstName: selectCustomerFirstName,  // sending the item name
-            sentLastName: selectCustomerLastName,  // sending the item picture URL
-            sentAdress: selectCustomerAdress,  // sending the item price
-            sentCity: selectCustomerCity,  // sending the item ID
-            sentMail: selectCustomerMail  // sending the selected quantity
+            firstName: selectCustomerFirstName,  // sending the item name
+            lastName: selectCustomerLastName,  // sending the item picture URL
+            adress: selectCustomerAdress,  // sending the item price
+            city: selectCustomerCity,  // sending the item ID
+            email: selectCustomerMail  // sending the selected quantity
         };
-        /* --- Object model for customer in LocalStorage [x] --- /
+        /* --- Object model for customer in LocalStorage [x] --- */
         
         /* --- Object model for "contact" in LocalStorage [o] --- */
         const sendingCustomerData = {  // defining an object with the informations to send to cart
-            sentFirstName: document.querySelector("#input__first-name").value,  // sending the item name
-            sentLastName: document.querySelector("#input__last-name").value,  // sending the item picture URL
-            sentAdress: document.querySelector("#input__adress").value,  // sending the item price
-            sentCity: document.querySelector("#input__city").value,  // sending the item ID
-            sentMail: document.querySelector("#input__mail").value  // sending the selected quantity
+            firstName: document.querySelector("#input__first-name").value,  // sending the item name
+            lastName: document.querySelector("#input__last-name").value,  // sending the item picture URL
+            adress: document.querySelector("#input__adress").value,  // sending the item price
+            city: document.querySelector("#input__city").value,  // sending the item ID
+            email: document.querySelector("#input__mail").value  // sending the selected quantity
         };
         // console.log("sendingCustomerData", sendingCustomerData)
         /* --- Object model for "contact" in LocalStorage [x] --- */
@@ -278,59 +282,89 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
         /*
         const conditionInputs = (field) => {  // declaring a function with RegEx concerning classic <input> to use for same conditions
-            return /^[a-zA-Z-]{3,30}$/.test(field);  // allowing letter from A to Z in lowercase and uppercase, from 3 characters to 30, and dash
+            return /^[a-zA-Z-]{2,36}$/.test(field);  // allowing letter from A to Z in lowercase and uppercase, from 2 characters to 36 ; and dash
         }
         */
 
+        /* Declaring function to display a message if there is error(s) in a field [o] / 
+        function displayError(value) {  // value will be the node where the message is attached
+            const displayErrorMessage = document.createElement("p");
+            displayErrorMessage.textContent = "Champs mal renseigné";
+            value.appendChild(displayErrorMessage);  // i.e. "value" is "formFirstNameDiv"
+        }
+        / Declaring function to display a message if there is error(s) in a field [x] */
+
         function checkFirstName() {
-            const valueFirstName = sendingCustomerData.sentFirstName;
-            // console.log("sendingCustomerData.sentFirstName", sendingCustomerData.sentFirstName)
-            if (/^[a-zA-Z-]{3,30}$/.test(valueFirstName)) {  // "if (conditionInputs(valueFirstName))" pour appeler conditionInputs(field)
-                console.log("OK");
+            const valueFirstName = sendingCustomerData.firstName;
+            // console.log("sendingCustomerData.firstName", sendingCustomerData.firstName)
+            if (/^[a-zA-Z-]{2,36}$/.test(valueFirstName)) {  // "if (conditionInputs(valueFirstName))" to call conditionInputs(field)
+                // console.log("OK");
+                document.querySelector(".input__first-name--error").textContent = "";  // hiding the message next to the field when it is valid
+                document.querySelector("#input__first-name").style.removeProperty("border-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
-                console.log("KO");
-                alert("Présence de caractères non-valides = checkFirstName");
+                // console.log("KO");
+                // displayError(formFirstNameDiv);
+                // console.log("displayError(formFirstNameDiv)", displayError(formFirstNameDiv))
+                document.querySelector(".input__first-name--error").textContent = "Ce prénom n'est pas valide.";  // displaying a message next to the invalid field
+                document.querySelector("#input__first-name").style.borderColor = "red";  // displaying visual cue on the invalid field
+                // alert("Présence de caractères non-valides = checkFirstName");
                 return false;
             };
         };
 
         function checkLastName() {
-            const valueLastName = sendingCustomerData.sentLastName;
-            if (/^[a-zA-Z-\s]{3,30}$/.test(valueLastName)) {
+            const valueLastName = sendingCustomerData.lastName;
+            if (/^[a-zA-Z\.-\s]{2,36}$/.test(valueLastName)) {  // allowing letter from A to Z in lowercase and uppercase, from 3 characters to 36 ; point, dash and space
+                document.querySelector(".input__last-name--error").textContent = "";  // hiding the message next to the field when it is valid
+                document.querySelector("#input__last-name").style.removeProperty("border-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
-                alert("Présence de caractères non-valides = checkLastName");
+                document.querySelector(".input__last-name--error").textContent = "Ce nom n'est pas valide.";  // displaying a message next to the invalid field
+                document.querySelector("#input__last-name").style.borderColor = "red";  // displaying visual cue on the invalid field
+                // alert("Présence de caractères non-valides = checkLastName");
                 return false;
             };
         };
 
         function checkAdress() {
-            const valueAdress = sendingCustomerData.sentAdress;
-            if (/^[a-zA-Z0-9.-\s]{10,300}$/.test(valueAdress)) {
+            const valueAdress = sendingCustomerData.adress;
+            if (/^[a-zA-Z0-9\.-\s]{8,240}$/.test(valueAdress)) {  // allowing letter from A to Z in lowercase and uppercase, from 8 characters to 240 ; numbers, dash, point and space
+                document.querySelector(".input__adress--error").textContent = "";  // hiding the message next to the field when it is valid
+                document.querySelector("#input__adress").style.removeProperty("border-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
-                alert("Présence de caractères non-valides = checkAdress");
+                document.querySelector(".input__adress--error").textContent = "Ce format d'adresse est incorrect.";  // displaying a message next to the invalid field
+                document.querySelector("#input__adress").style.borderColor = "red";  // displaying visual cue on the invalid field
+                // alert("Présence de caractères non-valides = checkAdress");
                 return false;
             };
         };
 
         function checkCity() {
-            const valueCity = sendingCustomerData.sentCity;
-            if (/^[a-zA-Z-]{2,40}$/.test(valueCity)) {
+            const valueCity = sendingCustomerData.city;
+            if (/^[a-zA-Z\.-\s]{2,50}$/.test(valueCity)) {  // allowing letter from A to Z in lowercase and uppercase, from 2 characters to 50 ; point, dash and space
+                document.querySelector(".input__city--error").textContent = "";  // hiding the message next to the field when it is valid
+                document.querySelector("#input__city").style.removeProperty("border-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
-                alert("Présence de caractères non-valides = checkCity");
+                document.querySelector(".input__city--error").textContent = "Veuillez saisir une adresse email valide.";  // displaying a message next to the invalid field
+                document.querySelector("#input__city").style.borderColor = "red";  // displaying visual cue on the invalid field
+                // alert("Présence de caractères non-valides = checkMail");
                 return false;
             };
         };
 
         function checkMail() {
-            const valueMail = sendingCustomerData.sentMail;
+            const valueMail = sendingCustomerData.email;
             if (/^[a-zA-Z0-9_\.-]{3,40}@[a-zA-Z0-9-]{2,10}\.[a-zA-Z]{2,4}$/.test(valueMail)) {  // alternative ? ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
+                document.querySelector(".input__mail--error").textContent = "";  // hiding the message next to the field when it is valid
+                document.querySelector("#input__mail").style.removeProperty("border-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
-                alert("Présence de caractères non-valides = checkMail");
+                document.querySelector(".input__mail--error").textContent = "Veuillez saisir une adresse email valide.";  // displaying a message next to the invalid field
+                document.querySelector("#input__mail").style.borderColor = "red";  // displaying visual cue on the invalid field
+                // alert("Présence de caractères non-valides = checkMail");
                 return false;
             };
         };
@@ -350,7 +384,8 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
             console.log("sendingCustomerData", sendingCustomerData);
         } else {
             event.preventDefault();
-            alert("Erreur dans le formulaire à corriger");
+            document.querySelector("#cart-invalid").textContent = "Tous les champs ne sont pas correctement renseignés.";  // displaying a message next to the invalid field
+            // alert("Erreur dans le formulaire à corriger");
         }
         console.log("checkFirstName", checkFirstName());
         console.log("checkLastName", checkLastName());
@@ -360,13 +395,41 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
         /* --- Required conditions to accept customer form data --- */
 
 
-        /* --- Creating an object to send with POST [o] --- */
-        const postData = {
+        /* --- Creating an object with "contact" and "products" to send with POST [o] --- */
+        const dataForServer = {
             contact: sendingCustomerData,  // form content
             products: itemsInStorage  // items selected
-        }
-        // console.log("postData", postData);
+        };
+        console.log("dataForServer", dataForServer);
         /* --- Creating an object to send with POST [x] --- */
+
+
+        /* --- Sending object with "contact" and "products" to server [o] --- */
+        const sendingData = fetch("http://localhost:3000/api/teddies/order", {
+            method: "POST",
+            headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json' 
+        },
+            body: JSON.stringify(dataForServer)
+        });
+
+        console.log("sendingData", sendingData)
+
+
+
+        /* --- Sending object with "contact" and "products" to server [x] --- */
+
+
+
+
+
+
+
+
+
+
+
 
         /*
 
