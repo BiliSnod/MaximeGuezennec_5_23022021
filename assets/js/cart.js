@@ -1,82 +1,82 @@
-let itemsInStorage = JSON.parse(localStorage.getItem("items"));
-console.log(itemsInStorage);
+let productsInStorage = JSON.parse(localStorage.getItem("products"));
+console.log(productsInStorage);
 
 
 /* ------------ Cart content [o] ------------ */
 const cartContent = document.querySelector("#cart");
 
 
-if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
+if (productsInStorage === null) {  // displaying a message if LocalStorage is empty
     // console.log("Le panier est vide")
     const nothingInCart = document.createElement("p");
     nothingInCart.textContent = "Votre panier ne contient aucun article.";
     cartContent.appendChild(nothingInCart);
     console.log(nothingInCart)
-} else {  // displaying the items in cart with informations stored in LocalStorage
-    let allPriceSums = [];  // defining an array to get all total price for each item 
+} else {  // displaying the products in cart with informations stored in LocalStorage
+    let allPriceSums = [];  // defining an array to get all total price for each product 
     // console.log("total", allPriceSums)
 
-    for (const itemInStorage of itemsInStorage) {  // what to do for each object of LocalStorage
-        // console.log(itemsInStorage.length)
+    for (const productInStorage of productsInStorage) {  // what to do for each object of LocalStorage
+        // console.log(productsInStorage.length)
 
-        /* --- Item in cart structure --- */
-        const itemInCart = document.createElement("article");
-        cartContent.appendChild(itemInCart);
+        /* --- Product in cart structure --- */
+        const productInCart = document.createElement("article");
+        cartContent.appendChild(productInCart);
 
-        const itemInCartTitle = document.createElement("h2");  // displaying item name
-        itemInCartTitle.textContent = `${itemInStorage.sentItemName}`;
-        itemInCart.appendChild(itemInCartTitle);
+        const productInCartTitle = document.createElement("h2");  // displaying product name
+        productInCartTitle.textContent = `${productInStorage.sentProductName}`;
+        productInCart.appendChild(productInCartTitle);
 
-        const returnToItemPage = document.createElement("a");  // creating a link on the picture to go on the item page
-        returnToItemPage.setAttribute("href", `item.html?id=${itemInStorage.sentItemId}`);
-        itemInCart.appendChild(returnToItemPage);
+        const returnToProductPage = document.createElement("a");  // creating a link on the picture to go on the product page
+        returnToProductPage.setAttribute("href", `product.html?id=${productInStorage.sentProductId}`);
+        productInCart.appendChild(returnToProductPage);
 
-        const itemInCartImage = document.createElement("img");  // displaying item picture
-        itemInCartImage.setAttribute("src", itemInStorage.sentItemUrl);
-        itemInCartImage.setAttribute("alt", `${itemInStorage.sentItemName} ajouté au panier`);
-        itemInCartImage.setAttribute("height", 80);
-        returnToItemPage.appendChild(itemInCartImage);
+        const productInCartImage = document.createElement("img");  // displaying product picture
+        productInCartImage.setAttribute("src", productInStorage.sentProductUrl);
+        productInCartImage.setAttribute("alt", `${productInStorage.sentProductName} ajouté au panier`);
+        productInCartImage.setAttribute("height", 80);
+        returnToProductPage.appendChild(productInCartImage);
 
-        const itemColorOption = document.createElement("p");  // displaying item quantity
-        itemColorOption.textContent = `Couleur : ${itemInStorage.sentItemColor}`;
-        itemInCart.appendChild(itemColorOption);
+        const productColorOption = document.createElement("p");  // displaying product quantity
+        productColorOption.textContent = `Couleur : ${productInStorage.sentProductColor}`;
+        productInCart.appendChild(productColorOption);
 
-        const itemInCartQuantity = document.createElement("p");  // displaying item quantity
-        itemInCartQuantity.textContent = `Quantité : ${itemInStorage.sentItemQuantity}`;
-        itemInCart.appendChild(itemInCartQuantity);
+        const productInCartQuantity = document.createElement("p");  // displaying product quantity
+        productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;
+        productInCart.appendChild(productInCartQuantity);
 
-        const itemInCartPrice = document.createElement("p");  // displaying item price
-        itemInCartPrice.textContent = `Prix : ${itemInStorage.sentItemPrice},00€`;
-        itemInCart.appendChild(itemInCartPrice);
+        const productInCartPrice = document.createElement("p");  // displaying product price
+        productInCartPrice.textContent = `Prix : ${productInStorage.sentProductPrice},00€`;
+        productInCart.appendChild(productInCartPrice);
 
-        const itemInCartDelete = document.createElement("button");  // defining a button tu delete item from cart
-        itemInCartDelete.setAttribute("class", "btn__delete-item");
-        itemInCartDelete.setAttribute("name", "delete-item");
-        itemInCartDelete.setAttribute("type", "button");
-        itemInCartDelete.textContent = "Supprimer";
-        itemInCart.appendChild(itemInCartDelete);
+        const productInCartDelete = document.createElement("button");  // defining a button tu delete product from cart
+        productInCartDelete.setAttribute("class", "btn__delete-product");
+        productInCartDelete.setAttribute("name", "delete-product");
+        productInCartDelete.setAttribute("type", "button");
+        productInCartDelete.textContent = "Supprimer";
+        productInCart.appendChild(productInCartDelete);
 
-        const deleteItems = document.querySelectorAll(".btn__delete-item");
-        for (const deleteItem of deleteItems) {  // LENGTH ????
-            deleteItem.addEventListener("click", (event) =>{  // what will happen on <button> click
+        const deleteProducts = document.querySelectorAll(".btn__delete-product");
+        for (const deleteProduct of deleteProducts) {  // LENGTH ????
+            deleteProduct.addEventListener("click", (event) =>{  // what will happen on <button> click
                 event.preventDefault();  // preventing normal button behavior
-                const itemToDelete = itemInStorage.sentItemId;
-                console.log("itemToDelete", itemToDelete)
+                const productToDelete = productInStorage.sentProductId;
+                console.log("productToDelete", productToDelete)
             });
         };
-        /* --- Item in cart structure [x] --- */
+        /* --- Product in cart structure [x] --- */
 
-        /* --- Calculating sum of price for each item regarding to its quantity [o] --- */
-        sumOfItemPrice = itemInStorage.sentItemPrice // * itemInStorage.sentItemQuantity;
-        allPriceSums.push(sumOfItemPrice);
-        /* --- Calculating sum of price for each item regarding to its quantity [x] --- */
+        /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
+        sumOfProductPrice = productInStorage.sentProductPrice  // * productInStorage.sentProductQuantity;
+        allPriceSums.push(sumOfProductPrice);
+        /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
     }
     /*
-    deleteItem = document.querySelectorAll(".btn__delete-item");
-    deleteItem.addEventListener("click", (event) =>{  // what will happen on <button> click
+    deleteProduct = document.querySelectorAll(".btn__delete-product");
+    deleteProduct.addEventListener("click", (event) =>{  // what will happen on <button> click
         event.preventDefault();  // preventing normal button behavior
-        const itemToDelete = itemInStorage.sentItemId;
-        itemInCart.filter(element => element.sentItemId !== itemToDelete); ///splice
+        const productToDelete = productInStorage.sentProductId;
+        productInCart.filter(element => element.sentProductId !== productToDelete); ///splice
         window.alert("L'article a été retiré du panier.");
         location.reload();
     });
@@ -258,20 +258,20 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
 
         /* --- Object model for customer in LocalStorage [o] --- /
         const sendingCustomerData = {  // defining an object with the informations to send to cart
-            firstName: selectCustomerFirstName,  // sending the item name
-            lastName: selectCustomerLastName,  // sending the item picture URL
-            adress: selectCustomerAdress,  // sending the item price
-            city: selectCustomerCity,  // sending the item ID
+            firstName: selectCustomerFirstName,  // sending the product name
+            lastName: selectCustomerLastName,  // sending the product picture URL
+            adress: selectCustomerAdress,  // sending the product price
+            city: selectCustomerCity,  // sending the product ID
             email: selectCustomerMail  // sending the selected quantity
         };
         /* --- Object model for customer in LocalStorage [x] --- */
         
         /* --- Object model for "contact" in LocalStorage [o] --- */
         const sendingCustomerData = {  // defining an object with the informations to send to cart
-            firstName: document.querySelector("#input__first-name").value,  // sending the item name
-            lastName: document.querySelector("#input__last-name").value,  // sending the item picture URL
-            adress: document.querySelector("#input__adress").value,  // sending the item price
-            city: document.querySelector("#input__city").value,  // sending the item ID
+            firstName: document.querySelector("#input__first-name").value,  // sending the product name
+            lastName: document.querySelector("#input__last-name").value,  // sending the product picture URL
+            adress: document.querySelector("#input__adress").value,  // sending the product price
+            city: document.querySelector("#input__city").value,  // sending the product ID
             email: document.querySelector("#input__mail").value  // sending the selected quantity
         };
         // console.log("sendingCustomerData", sendingCustomerData)
@@ -398,7 +398,7 @@ if (itemsInStorage === null) {  // displaying a message if LocalStorage is empty
         /* --- Creating an object with "contact" and "products" to send with POST [o] --- */
         const dataForServer = {
             contact: sendingCustomerData,  // form content
-            products: itemsInStorage  // items selected
+            products: productsInStorage  // products selected
         };
         console.log("dataForServer", dataForServer);
         /* --- Creating an object to send with POST [x] --- */
