@@ -1,5 +1,5 @@
 let productsInStorage = JSON.parse(localStorage.getItem("products"));
-console.log(productsInStorage);
+console.log("productsInStorage", productsInStorage);
 
 
 /* ------------ Cart content [o] ------------ */
@@ -73,7 +73,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCart.appendChild(productInCartDelete);
 
         const deleteProducts = document.querySelectorAll(".btn__delete-product");
-        for (const deleteProduct of deleteProducts) {  // LENGTH ????
+        for (const deleteProduct of deleteProducts) {  // 
             deleteProduct.addEventListener("click", (event) =>{  // what will happen on <button> click
                 event.preventDefault();  // preventing normal button behavior
                 const productToDelete = productInStorage.sentProductId;
@@ -143,7 +143,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         /* --- Getting the fields values [o] --- /
         const selectCustomerFirstName = document.querySelector("#input__first-name").value;
         const selectCustomerLastName = document.querySelector("#input__last-name").value;
-        const selectCustomerAdress = document.querySelector("#input__adress").value;
+        const selectCustomerAddress = document.querySelector("#input__address").value;
         const selectCustomerCity = document.querySelector("#input__city").value;
         const selectCustomerMail = document.querySelector("#input__mail").value;
         /* --- Getting the fields values [x] --- /
@@ -152,19 +152,19 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         const sendingCustomerData = {  // defining an object with the informations to send to cart
             firstName: selectCustomerFirstName,  // sending the product name
             lastName: selectCustomerLastName,  // sending the product picture URL
-            adress: selectCustomerAdress,  // sending the product price
+            address: selectCustomerAddress,  // sending the product price
             city: selectCustomerCity,  // sending the product ID
             email: selectCustomerMail  // sending the selected quantity
         };
         /* --- Object model for customer in LocalStorage [x] --- */
         
         /* --- Object model for "contact" in LocalStorage [o] --- */
-        const sendingCustomerData = {  // defining an object with the informations to send to cart
-            firstName: document.querySelector("#input__first-name").value,  // sending the product name
-            lastName: document.querySelector("#input__last-name").value,  // sending the product picture URL
-            adress: document.querySelector("#input__adress").value,  // sending the product price
-            city: document.querySelector("#input__city").value,  // sending the product ID
-            email: document.querySelector("#input__mail").value  // sending the selected quantity
+        const sendingCustomerData = {  // defining an object with the user informations to send to LocalStorage
+            firstName: document.querySelector("#input__first-name").value,
+            lastName: document.querySelector("#input__last-name").value,
+            address: document.querySelector("#input__address").value,
+            city: document.querySelector("#input__city").value,
+            email: document.querySelector("#input__mail").value
         };
         // console.log("sendingCustomerData", sendingCustomerData)
         /* --- Object model for "contact" in LocalStorage [x] --- */
@@ -218,15 +218,15 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             };
         };
 
-        function checkAdress() {
-            const valueAdress = sendingCustomerData.adress;
-            if (/^[a-zA-Z0-9\.-\s]{8,240}$/.test(valueAdress)) {  // allowing letter from A to Z in lowercase and uppercase, from 8 characters to 240 ; numbers, dash, point and space
-                document.querySelector(".input__adress--error").textContent = "";  // hiding the message next to the field when it is valid
-                document.querySelector("#input__adress").style.removeProperty("border-color");  // displaying visual cue on the invalid field
+        function checkAddress() {
+            const valueAddress = sendingCustomerData.address;
+            if (/^[a-zA-Z0-9\.-\s]{8,240}$/.test(valueAddress)) {  // allowing letter from A to Z in lowercase and uppercase, from 8 characters to 240 ; numbers, dash, point and space
+                document.querySelector(".input__address--error").textContent = "";  // hiding the message next to the field when it is valid
+                document.querySelector("#input__address").style.removeProperty("border-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
-                document.querySelector(".input__adress--error").textContent = "Ce format d'adresse est incorrect.";  // displaying a message next to the invalid field
-                document.querySelector("#input__adress").style.borderColor = "red";  // displaying visual cue on the invalid field
+                document.querySelector(".input__address--error").textContent = "Ce format d'adresse est incorrect.";  // displaying a message next to the invalid field
+                document.querySelector("#input__address").style.borderColor = "red";  // displaying visual cue on the invalid field
                 return false;
             };
         };
@@ -266,7 +266,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         // console.log("document.querySelector(...).value", document.querySelector("#input__first-name").value);
 
         /* --- Required conditions to accept customer form data --- */
-        if (checkFirstName() && checkLastName() && checkAdress() && checkCity() && checkMail()) {
+        if (checkFirstName() && checkLastName() && checkAddress() && checkCity() && checkMail()) {
             event.preventDefault();
             localStorage.setItem("contact", JSON.stringify(sendingCustomerData));
             console.log("sendingCustomerData", sendingCustomerData);
@@ -277,16 +277,27 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         }
         console.log("checkFirstName", checkFirstName());
         console.log("checkLastName", checkLastName());
-        console.log("checkAdress", checkAdress());
+        console.log("checkAddress", checkAddress());
         console.log("checkCity", checkCity());
         console.log("checkMail", checkMail());
         /* --- Required conditions to accept customer form data --- */
 
 
+        /* --- Defining an array with the list of products to send to server [o] --- */
+        const sendingProductsList = [];
+        for (const productInStorage of productsInStorage) {
+        sendingProductsList.push(productInStorage.sentProductId)
+        console.log("productsInStorage", productsInStorage);
+        console.log("productInStorage.sentProductId", productInStorage.sentProductId);
+        }
+        console.log("sendingProductsList", sendingProductsList);
+        /* --- Defining an array with the list of products to send to server [x] --- */
+
+
         /* --- Creating an object with "contact" and "products" to send with POST [o] --- */
         const dataForServer = {
             contact: sendingCustomerData,  // form content
-            products: productsInStorage  // products selected
+            products: sendingProductsList  // products selected
         };
         console.log("dataForServer", dataForServer);
         /* --- Creating an object to send with POST [x] --- */
