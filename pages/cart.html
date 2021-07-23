@@ -31,7 +31,52 @@
         <!-- Item OVER -->
 
         <!-- Customer data form -->
-        <section id="customer-form"></section>
+        <section id="customer-form">
+            <form>
+                <fieldset>
+                    <legend>Pour commander, merci de compléter ce formulaire.</legend>
+                    <div>
+                        <label for="input__first-name">
+                            Prénom <b>(requis)</b> :
+                            <input type="text" id="input__first-name" name="first-name" maxlength="36" required />
+                            <span class="input__first-name--error"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="input__last-name">
+                            Nom <b>(requis)</b> :
+                            <input type="text" id="input__last-name" name="last-name" maxlength="36" required />
+                            <span class="input__last-name--error"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="input__adress">
+                            Adresse <b>(requis)</b> :
+                            <input type="text" id="input__adress" name="adress" maxlength="240" required />
+                            <span class="input__adress--error"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="input__city">
+                            Ville  <b>(requis)</b> :
+                            <input type="text" id="input__city" name="city" maxlength="50" required />
+                            <span class="input__city--error"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="input__mail">
+                            E-mail <b>(requis)</b> :
+                            <input type="text" id="input__mail" name="mail" maxlength="56" required />
+                            <span class="input__mail--error"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <p id="cart-invalid"></p>
+                        <button type="submit" id="btn__confirm-cart" name="confirm-cart">Valider mon panier</button>
+                    </div>
+                </fieldset>
+            </form>
+        </section>
         <!-- Customer data form OVER -->
     
     </main>

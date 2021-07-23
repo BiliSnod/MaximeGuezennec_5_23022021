@@ -124,127 +124,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
 
 
-    /* --------- Customer informations form [o] --------- */
-    const customerForm = document.querySelector("#customer-form");
-
-    const formContainer = document.createElement("form");
-    // formContainer.setAttribute("action", "");  // to fill ?
-    // formContainer.setAttribute("method", "POST");  // ???
-    customerForm.appendChild(formContainer);
-
-    const formField = document.createElement("fieldset");
-    formContainer.appendChild(formField);
-
-    const formLegend = document.createElement("legend");
-    formLegend.textContent = "Pour commander, merci de compléter ce formulaire.";
-    formField.appendChild(formLegend);
-
-    /* First Name [o] */
-    const formFirstNameDiv = document.createElement("div");
-    formField.appendChild(formFirstNameDiv);
-
-    const formFirstNameLabel = document.createElement("label");
-    formFirstNameLabel.setAttribute("for", "input__first-name");
-    formFirstNameLabel.innerHTML = "Prénom <b>(requis)</b> <span class=\"input__first-name--error\"></span> :";
-    formFirstNameDiv.appendChild(formFirstNameLabel);
-
-    const formFirstNameInput = document.createElement("input");
-    formFirstNameInput.setAttribute("type", "text");
-    formFirstNameInput.setAttribute("id", "input__first-name");
-    formFirstNameInput.setAttribute("name", "first-name");
-    formFirstNameInput.setAttribute("maxlength", 60);
-    formFirstNameInput.required = true;
-    formFirstNameDiv.appendChild(formFirstNameInput);
-    /* First Name [x] */
-
-    /* Last Name [o] */
-    const formLastNameDiv = document.createElement("div");
-    formField.appendChild(formLastNameDiv);
-
-    const formLastNameLabel = document.createElement("label");
-    formLastNameLabel.setAttribute("for", "input__last-name");
-    formLastNameLabel.innerHTML = "Nom <b>(requis)</b> <span class=\"input__last-name--error\"></span> :";
-    formLastNameDiv.appendChild(formLastNameLabel);
-
-    const formLastNameInput = document.createElement("input");
-    formLastNameInput.setAttribute("type", "text");
-    formLastNameInput.setAttribute("id", "input__last-name");
-    formLastNameInput.setAttribute("name", "last-name");
-    formLastNameInput.setAttribute("maxlength", 60);
-    formLastNameInput.required = true;
-    formLastNameDiv.appendChild(formLastNameInput);
-    /* Last Name [x] */
-
-    /* Adress [o] */
-    const formAdressDiv = document.createElement("div");
-    formField.appendChild(formAdressDiv);
-
-    const formAdressLabel = document.createElement("label");
-    formAdressLabel.setAttribute("for", "input__adress");
-    formAdressLabel.innerHTML = "Adresse <b>(requis)</b> <span class=\"input__adress--error\"></span> :";
-    formAdressDiv.appendChild(formAdressLabel);
-
-    const formAdressInput = document.createElement("input");
-    formAdressInput.setAttribute("type", "text");
-    formAdressInput.setAttribute("id", "input__adress");
-    formAdressInput.setAttribute("name", "adress");
-    formAdressInput.setAttribute("maxlength", 120);
-    formAdressInput.required = true;
-    formAdressDiv.appendChild(formAdressInput);
-    /* Adress [x] */
-    
-    /* City [o] */
-    const formCityDiv = document.createElement("div");
-    formField.appendChild(formCityDiv);
-
-    const formCityLabel = document.createElement("label");
-    formCityLabel.setAttribute("for", "input__city");
-    formCityLabel.innerHTML = "Ville <b>(requis)</b> <span class=\"input__city--error\"></span> :";
-    formCityDiv.appendChild(formCityLabel);
-
-    const formCityInput = document.createElement("input");
-    formCityInput.setAttribute("type", "text");
-    formCityInput.setAttribute("id", "input__city");
-    formCityInput.setAttribute("name", "city");
-    formCityInput.setAttribute("maxlength", 60);
-    formCityInput.required = true;
-    formCityDiv.appendChild(formCityInput);
-    /* City [x] */
-
-    /* Mail [o] */
-    const formMailDiv = document.createElement("div");
-    formField.appendChild(formMailDiv);
-
-    const formMailLabel = document.createElement("label");
-    formMailLabel.setAttribute("for", "input__mail");
-    formMailLabel.innerHTML = "E-mail <b>(requis)</b> <span class=\"input__mail--error\"></span> :";
-    formMailDiv.appendChild(formMailLabel);
-
-    const formMailInput = document.createElement("input");
-    formMailInput.setAttribute("type", "email");
-    formMailInput.setAttribute("id", "input__mail");
-    formMailInput.setAttribute("name", "mail");
-    formCityInput.setAttribute("maxlength", 120);
-    formMailInput.required = true;
-    formMailDiv.appendChild(formMailInput);
-    /* Mail [x] */
-
-
     /* --- Cart validation [o] --- */
-    const confirmCartDiv = document.createElement("div");
-    formField.appendChild(confirmCartDiv);
-
-    const problemCartButton = document.createElement("p"); // defining a <button> element to confirm cart
-    problemCartButton.setAttribute("id", "cart-invalid");
-    confirmCartDiv.appendChild(problemCartButton);
-
-    const confirmCartButton = document.createElement("button"); // defining a <button> element to confirm cart
-    confirmCartButton.setAttribute("id", "btn__confirm-cart");
-    confirmCartButton.setAttribute("name", "confirm-cart");
-    confirmCartButton.setAttribute("type", "submit");
-    // confirmCartButton.disabled = true;  // disabling the button by default
-    confirmCartButton.textContent = "Valider mon panier";
-    confirmCartDiv.appendChild(confirmCartButton);
 
     
     /* --- Sending customer informations to LocalStorage [o] --- */
@@ -325,7 +205,6 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             } else {
                 document.querySelector(".input__last-name--error").textContent = "Ce nom n'est pas valide.";  // displaying a message next to the invalid field
                 document.querySelector("#input__last-name").style.borderColor = "red";  // displaying visual cue on the invalid field
-                // alert("Présence de caractères non-valides = checkLastName");
                 return false;
             };
         };
@@ -339,7 +218,6 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             } else {
                 document.querySelector(".input__adress--error").textContent = "Ce format d'adresse est incorrect.";  // displaying a message next to the invalid field
                 document.querySelector("#input__adress").style.borderColor = "red";  // displaying visual cue on the invalid field
-                // alert("Présence de caractères non-valides = checkAdress");
                 return false;
             };
         };
@@ -353,7 +231,6 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             } else {
                 document.querySelector(".input__city--error").textContent = "Veuillez saisir une adresse email valide.";  // displaying a message next to the invalid field
                 document.querySelector("#input__city").style.borderColor = "red";  // displaying visual cue on the invalid field
-                // alert("Présence de caractères non-valides = checkMail");
                 return false;
             };
         };
@@ -367,7 +244,6 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             } else {
                 document.querySelector(".input__mail--error").textContent = "Veuillez saisir une adresse email valide.";  // displaying a message next to the invalid field
                 document.querySelector("#input__mail").style.borderColor = "red";  // displaying visual cue on the invalid field
-                // alert("Présence de caractères non-valides = checkMail");
                 return false;
             };
         };
