@@ -11,17 +11,26 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     const nothingInCart = document.createElement("p");
     nothingInCart.textContent = "Votre panier ne contient aucun article.";
     cartContent.appendChild(nothingInCart);
-    console.log(nothingInCart)
+    console.log(nothingInCart);
+
+    document.getElementById("customer-form").style.display = "none";  // hiding the form when cart is empty
+    document.getElementById("customer-form").setAttribute("aria-hidden", "true");  // hiding the form from readers
 } else {  // displaying the products in cart with informations stored in LocalStorage
     let allPriceSums = [];  // defining an array to get all total price for each product 
     // console.log("total", allPriceSums)
+
+    const listOfProducts = document.createElement("div");
+    listOfProducts.setAttribute("class", "cart-products d-inline-flex flex-wrap");
+    cartContent.appendChild(listOfProducts);
 
     for (const productInStorage of productsInStorage) {  // what to do for each object of LocalStorage
         // console.log(productsInStorage.length)
 
         /* --- Product in cart structure --- */
+
         const productInCart = document.createElement("article");
-        cartContent.appendChild(productInCart);
+        productInCart.setAttribute("class", "m-3 p-4-sm");
+        listOfProducts.appendChild(productInCart);
 
         const productInCartTitle = document.createElement("h2");  // displaying product name
         productInCartTitle.textContent = `${productInStorage.sentProductName}`;
@@ -292,11 +301,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         },
             body: JSON.stringify(dataForServer)
         });
-
         console.log("sendingData", sendingData)
-
-
-
         /* --- Sending object with "contact" and "products" to server [x] --- */
 
 
