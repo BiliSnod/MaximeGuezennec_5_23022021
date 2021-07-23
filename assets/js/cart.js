@@ -36,20 +36,27 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCartImage.setAttribute("alt", `${productInStorage.sentProductName} ajouté au panier`);
         productInCartImage.setAttribute("height", 80);
         returnToProductPage.appendChild(productInCartImage);
-
-        const productColorOption = document.createElement("p");  // displaying product quantity
+        /*
+        const productColorOption = document.createElement("p");  // displaying product color
         productColorOption.textContent = `Couleur : ${productInStorage.sentProductColor}`;
         productInCart.appendChild(productColorOption);
-
+        */
         const productInCartQuantity = document.createElement("p");  // displaying product quantity
         productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;
         productInCart.appendChild(productInCartQuantity);
 
+        /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
+        sumOfProductPrice = productInStorage.sentProductPrice * productInStorage.sentProductQuantity;
+        allPriceSums.push(sumOfProductPrice);
+        /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
+
+
         const productInCartPrice = document.createElement("p");  // displaying product price
-        productInCartPrice.textContent = `Prix : ${productInStorage.sentProductPrice},00€`;
+        productInCartPrice.textContent = `Prix : ${sumOfProductPrice},00€`;
         productInCart.appendChild(productInCartPrice);
 
         const productInCartDelete = document.createElement("button");  // defining a button tu delete product from cart
+        productInCartDelete.setAttribute("id", `delete-${productInStorage.sentProductId}`);
         productInCartDelete.setAttribute("class", "btn__delete-product");
         productInCartDelete.setAttribute("name", "delete-product");
         productInCartDelete.setAttribute("type", "button");
@@ -61,15 +68,11 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             deleteProduct.addEventListener("click", (event) =>{  // what will happen on <button> click
                 event.preventDefault();  // preventing normal button behavior
                 const productToDelete = productInStorage.sentProductId;
-                console.log("productToDelete", productToDelete)
+                localStorage.setItem("products", JSON.stringify(productsInStorage));
+                console.log("productToDelete", productToDelete);
             });
         };
         /* --- Product in cart structure [x] --- */
-
-        /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
-        sumOfProductPrice = productInStorage.sentProductPrice  // * productInStorage.sentProductQuantity;
-        allPriceSums.push(sumOfProductPrice);
-        /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
     }
     /*
     deleteProduct = document.querySelectorAll(".btn__delete-product");
