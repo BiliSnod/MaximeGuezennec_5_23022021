@@ -99,15 +99,15 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     const totalCartPrice = allPriceSums.reduce(function (accumulator, currentValue) {
         return accumulator + currentValue
     }, 0);
-    // console.log("total", totalCartPrice)
+    // console.log("total", totalCartPrice);
     /* --- Calculating cart total price [x] --- */
 
 
     /* --- Displaying cart total price [o] --- */
-    const cartTotalPrice = document.createElement("div");
-    cartTotalPrice.setAttribute("id", "total-price");
-    cartTotalPrice.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;
-    cartContent.appendChild(cartTotalPrice);
+    const cartDisplayTotal = document.createElement("div");
+    cartDisplayTotal.setAttribute("id", "total-price");
+    cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;
+    cartContent.appendChild(cartDisplayTotal);
     /* --- Displaying cart total price [x] --- */
 
 
@@ -124,7 +124,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         event.preventDefault();  // preventing normal button behavior
         localStorage.clear();  // deleting all entries of LocalStorage
         window.alert("Le panier est vide.");
-        location.reload();  // another way [ window.location.href = "cart.html"; ]
+        location.reload();  // another way [ window.location = "cart.html"; ]
     });
     /* --- Emptying cart [x] --- */
 
@@ -185,6 +185,50 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             value.appendChild(displayErrorMessage);  // i.e. "value" is "formFirstNameDiv"
         }
         / Declaring function to display a message if there is error(s) in a field [x] */
+
+
+        /* Conditions for validation of each field [o] */
+        const regexFirstName = /^[a-zA-Z-]{2,36}$/.test(sendingCustomerData.firstName);
+        const regexLastName = /^[a-zA-Z\.-\s]{2,36}$/.test(sendingCustomerData.lastName);
+        const regexAddress = /^[a-zA-Z0-9\.-\s]{8,240}$/.test(sendingCustomerData.address);
+        const regexCity = /^[a-zA-Z\.-\s]{2,50}$/.test(sendingCustomerData.city);
+        const regexMail = /^[a-zA-Z0-9_\.-]{3,40}@[a-zA-Z0-9-]{2,10}\.[a-zA-Z]{2,4}$/.test(sendingCustomerData.email);
+
+        /* Conditions for validation of each field [x] */
+
+        /* Declaring a function to display a message and visual cue if there is error(s) in a field [o] */
+        function checkFormData(condition, selector) {
+            if (condition) {
+                document.querySelector(`.${selector}--error`).textContent = "";  // hiding the message next to the field when it is valid
+                console.log("selector", selector);
+                document.querySelector(`#${selector}`).style.removeProperty("border-color");  // displaying visual cue on the invalid field
+                return true;
+            } else {
+                document.querySelector(`.${selector}--error`).textContent = "Champs à corriger.";  // displaying a message next to the invalid field
+                document.querySelector(`#${selector}`).style.borderColor = "red";  // displaying visual cue on the invalid field
+                return false;
+            };
+        };
+        /* Declaring a function to display a message and visual cue if there is error(s) in a field [x] */
+
+        /* Calling the function for each field [o] */
+        checkFormData(regexFirstName, "input__first-name");
+        checkFormData(regexLastName, "input__last-name");
+        checkFormData(regexAddress, "input__address");
+        checkFormData(regexCity, "input__city");
+        checkFormData(regexMail, "input__mail");
+        /* Calling the function for each field [x] */
+
+        /* Calling the function for each field [o] /
+        function allCheck() {
+            checkFormData(regexFirstName, "input__first-name") && checkFormData(regexLastName, "input__last-name") && checkFormData(regexAddress, "input__address") && checkFormData(regexCity, "input__city-name") && checkFormData(regexMail, "input__mail-name");
+        }
+
+        allCheck();
+        / Calling the function for each field [x] */
+
+        
+        /*
 
         function checkFirstName() {
             const valueFirstName = sendingCustomerData.firstName;
@@ -256,6 +300,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
                 return false;
             };
         };
+        */
 
 
 
@@ -266,59 +311,101 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         // console.log("document.querySelector(...).value", document.querySelector("#input__first-name").value);
 
         /* --- Required conditions to accept customer form data --- */
-        if (checkFirstName() && checkLastName() && checkAddress() && checkCity() && checkMail()) {
+        if (checkFormData(regexFirstName, "input__first-name") && checkFormData(regexLastName, "input__last-name") && checkFormData(regexAddress, "input__address") && checkFormData(regexCity, "input__city") && checkFormData(regexMail, "input__mail")) {
             event.preventDefault();
             localStorage.setItem("contact", JSON.stringify(sendingCustomerData));
-            console.log("sendingCustomerData", sendingCustomerData);
+            // console.log("sendingCustomerData", sendingCustomerData);
+
+
+            /* --- Defining an array with the list of products to send to server [o] --- */
+            const sendingProductsList = [];
+            for (const productInStorage of productsInStorage) {
+            sendingProductsList.push(productInStorage.sentProductId);
+            // console.log("productsInStorage", productsInStorage);
+            // console.log("productInStorage.sentProductId", productInStorage.sentProductId);
+            }
+            // console.log("sendingProductsList", sendingProductsList);
+            /* --- Defining an array with the list of products to send to server [x] --- */
+
+
+            /* --- Creating an object with "contact" and "products" to send with POST [o] --- */
+            const dataForServer = {
+                contact: sendingCustomerData,  // form content
+                products: sendingProductsList  // products selected
+            };
+            console.log("dataForServer", dataForServer);
+            /* --- Creating an object to send with POST [x] --- */
+
+
+            /* --- Sending object with "contact" and "products" to server [o] --- */
+            const sendingData = fetch("http://localhost:3000/api/teddies/order", {
+                method: "POST",
+                headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json' 
+            },
+                body: JSON.stringify(dataForServer)
+            });
+            console.log("sendingData", sendingData)
+            /* --- Sending object with "contact" and "products" to server [x] --- */
+
+            /* --- Checking server response in console [o] --- */
+            sendingData.then(async (response) => {
+                try {
+                    const content = await response.json();
+                    console.log('response', response);
+                    console.log('content', content);
+
+                    /* Sending ID created by the server for the order with total price to LocalStorage [o] */
+                    console.log("content.orderId", content.orderId);  // ID created by the server for the order
+
+                    const orderInformations = {  // defining an object with the informations to send to cart
+                        orderAmount: totalCartPrice,
+                        orderId: content.orderId
+                    };
+                    localStorage.setItem("order", JSON.stringify(orderInformations));
+                    console.log("orderInformations", orderInformations);
+                    /* Sending ID created by the server for the order with total price to LocalStorage [x] */
+                    
+                    /* Redirect to the order confirmation page [o] */
+                    // window.location = "order.html";
+                    /* Redirect to the order confirmation page [x] */
+
+                } catch (error) {
+                    console.error("error", error);
+                };
+            })
+            /* --- Checking server response in console [x] --- */
+
         } else {
-            event.preventDefault();
+            // event.preventDefault();
             document.querySelector("#cart-invalid").textContent = "Tous les champs ne sont pas correctement renseignés.";  // displaying a message next to the invalid field
             // alert("Erreur dans le formulaire à corriger");
         }
-        console.log("checkFirstName", checkFirstName());
-        console.log("checkLastName", checkLastName());
-        console.log("checkAddress", checkAddress());
-        console.log("checkCity", checkCity());
-        console.log("checkMail", checkMail());
+        console.log("checkFirstName", checkFormData(regexFirstName, "input__first-name"));
+        console.log("checkLastName", checkFormData(regexLastName, "input__last-name"));
+        console.log("checkAddress", checkFormData(regexAddress, "input__address"));
+        console.log("checkCity", checkFormData(regexCity, "input__city"));
+        console.log("checkMail", checkFormData(regexMail, "input__mail"));
         /* --- Required conditions to accept customer form data --- */
 
 
-        /* --- Defining an array with the list of products to send to server [o] --- */
-        const sendingProductsList = [];
-        for (const productInStorage of productsInStorage) {
-        sendingProductsList.push(productInStorage.sentProductId)
-        console.log("productsInStorage", productsInStorage);
-        console.log("productInStorage.sentProductId", productInStorage.sentProductId);
-        }
-        console.log("sendingProductsList", sendingProductsList);
-        /* --- Defining an array with the list of products to send to server [x] --- */
-
-
-        /* --- Creating an object with "contact" and "products" to send with POST [o] --- */
-        const dataForServer = {
-            contact: sendingCustomerData,  // form content
-            products: sendingProductsList  // products selected
-        };
-        console.log("dataForServer", dataForServer);
-        /* --- Creating an object to send with POST [x] --- */
-
-
-        /* --- Sending object with "contact" and "products" to server [o] --- */
-        const sendingData = fetch("http://localhost:3000/api/teddies/order", {
-            method: "POST",
-            headers: { 
-        'Accept': 'application/json', 
-        'Content-Type': 'application/json' 
-        },
-            body: JSON.stringify(dataForServer)
-        });
-        console.log("sendingData", sendingData)
-        /* --- Sending object with "contact" and "products" to server [x] --- */
 
 
 
 
-
+            /* --- Checking server response [o] --- /
+            const checkingData = fetch("http://localhost:3000/api/teddies/order");
+            checkingData.then(async(response) => {
+                try {
+                    console.log('checkingData', checkingData);
+                    const dataSent = await response.json();
+                    console.log('dataSent', dataSent);
+                } catch (error) {
+                    console.log("error", error);
+                }
+            });
+            / --- Checking server response [x] --- */
 
 
 
