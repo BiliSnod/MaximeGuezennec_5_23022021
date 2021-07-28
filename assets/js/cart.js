@@ -12,7 +12,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     const nothingInCart = document.createElement("p");
     nothingInCart.textContent = "Votre panier ne contient aucun article.";
     cartContent.appendChild(nothingInCart);
-    console.log(nothingInCart);
+    // console.log(nothingInCart);
 
     document.getElementById("customer-form").style.display = "none";  // hiding the form when cart is empty
     document.getElementById("customer-form").setAttribute("aria-hidden", "true");  // hiding the form from readers
@@ -26,12 +26,11 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     listOfProducts.setAttribute("class", "cart-products d-inline-flex flex-wrap");
     cartContent.appendChild(listOfProducts);
 
-
-    for (const productInStorage of productsInStorage) {  // what to do for each object of LocalStorage
-        // console.log(productsInStorage.length)
+    // console.log("productsInStorage.length", productsInStorage.length)
+    productsInStorage.forEach(productInStorage => {  // what to do for each object of LocalStorage "products" array
+    // console.log("productInStorage", productInStorage)        
 
         /* --- Product in cart structure --- */
-
         const productInCart = document.createElement("article");
         productInCart.setAttribute("class", "m-3 p-4-sm");
         listOfProducts.appendChild(productInCart);
@@ -58,17 +57,19 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;
         productInCart.appendChild(productInCartQuantity);
 
+
         /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
         sumOfProductPrice = productInStorage.sentProductPrice * productInStorage.sentProductQuantity;
         allPriceSums.push(sumOfProductPrice);
         /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
 
-
         const productInCartPrice = document.createElement("p");  // displaying product price
         productInCartPrice.textContent = `Prix : ${sumOfProductPrice},00€`;
         productInCart.appendChild(productInCartPrice);
 
-        const productInCartDelete = document.createElement("button");  // defining a button tu delete product from cart
+
+        /* --- Deleting a product [o] --- */
+        const productInCartDelete = document.createElement("button");  // defining a button to delete product from cart
         productInCartDelete.setAttribute("id", `delete-${productInStorage.sentProductId}`);
         productInCartDelete.setAttribute("class", "btn__delete-product");
         productInCartDelete.setAttribute("name", "delete-product");
@@ -76,27 +77,24 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCartDelete.textContent = "Supprimer";
         productInCart.appendChild(productInCartDelete);
 
-        const deleteProducts = document.querySelectorAll(".btn__delete-product");
-        for (const deleteProduct of deleteProducts) {  // 
-            deleteProduct.addEventListener("click", (event) =>{  // what will happen on <button> click
-                event.preventDefault();  // preventing normal button behavior
-                const productToDelete = productInStorage.sentProductId;
-                localStorage.setItem("products", JSON.stringify(productsInStorage));
-                console.log("productToDelete", productToDelete);
-            });
-        };
+        const productToDelete = productsInStorage.indexOf(productInStorage);  // determining the position of the product in LocalStorage's "products" array
+        // console.log("productToDelete", productToDelete);
+
+        // console.log("productInCartDelete", productInCartDelete);
+        productInCartDelete.addEventListener("click", (event) =>{  // what is happening when a <button> clicked
+            // console.log("productsInStorage", productsInStorage);
+            const deleteProduct = productsInStorage.splice(productToDelete, 1);  // deleting the product in LocalStorage's "products" array
+            localStorage.setItem("products", JSON.stringify(productsInStorage));  // updating LocalStorage
+            // console.log("deleteProduct", deleteProduct);
+            if (productsInStorage.length === 0) {  // if LocalStorage's "products" array is empty
+                localStorage.removeItem("products");  // remove LocalStorage's "products" array to avoid displaying an empty product
+            }
+            // console.log("productsInStorage", productsInStorage);
+            location.reload();  // reload the page to update positions in LocalStorage's "products" array
+        });
+        /* --- Deleting a product [x] --- */
         /* --- Product in cart structure [x] --- */
-    }
-    /*
-    deleteProduct = document.querySelectorAll(".btn__delete-product");
-    deleteProduct.addEventListener("click", (event) =>{  // what will happen on <button> click
-        event.preventDefault();  // preventing normal button behavior
-        const productToDelete = productInStorage.sentProductId;
-        productInCart.filter(element => element.sentProductId !== productToDelete); ///splice
-        window.alert("L'article a été retiré du panier.");
-        location.reload();
     });
-    */
 
 
     /* --- Calculating cart total price [o] --- */
