@@ -6,13 +6,9 @@ let productId = params.get("id");  // getting the value of the "id" parameter in
 fetch(`http://localhost:3000/api/teddies/${productId}`)
     .then(result => result.json())
     .then(teddy => {
-        const product = document.getElementById("product");  // targeting the "product" <section>
-        
-        const teddyProduct = document.createElement("article");  // defining an <article> element for the product
-        product.appendChild(teddyProduct);  // adding the <article> element inside the "product" <section>
-
-
         /* --- Product title [o] --- */
+        document.title = `Commandez ${teddy.name} - Ours en peluche faits à la main - Oripeluche par Orinoco`;
+        
         const teddyTitleMain = document.querySelector("#title");
         const teddyTitle = document.createElement("h1"); // defining a <h1> element for the product
         teddyTitle.textContent = `Commandez ${teddy.name}, parmi nos peluches faites-main`;  // filling the <h1> element with the product name
@@ -21,36 +17,51 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
         /* --- Product title [x] --- */
 
 
+        const product = document.getElementById("product");  // targeting the "product" <section>
+        
+        const teddyProduct = document.createElement("article");  // defining an <article> element for the product
+        teddyProduct.classList.add("d-md-flex", "flex-row", "m-2", "p-1", "p-sm-3", "border", "border-5", "rounded-3", "bg-light", "bg-gradient");  // adding class attribute (styling)
+        product.appendChild(teddyProduct);  // adding the <article> element inside the "product" <section>
+
+
         /* --- Product description [o] --- */
+        const teddyFigureDiv = document.createElement("div");
+        teddyFigureDiv.classList.add("col-md-8");  // adding class attribute (styling)
+        teddyProduct.appendChild(teddyFigureDiv);
+
         const teddyFigure = document.createElement("figure");
-        teddyProduct.classList.add("m-2", "p-1", "p-sm-3", "border", "border-5", "rounded-3", "bg-light", "bg-gradient");  // adding class attribute (styling)
-        teddyProduct.appendChild(teddyFigure);  // adding the <figure> element inside the "product" <section>
+        teddyFigureDiv.appendChild(teddyFigure);  // adding the <figure> element inside the "product" <section>
         
         const teddyUrl = document.createElement("img");  // defining an <img> element for each product
         teddyUrl.setAttribute("src", teddy.imageUrl);  // filling the "src" attribute with the image URL
         teddyUrl.setAttribute("height", "320");  // TEMPORARY
         teddyUrl.setAttribute("alt", `Peluche ${teddy.name}`);  // filling the alt attribute with a description
+        teddyUrl.classList.add("lead", "img-fluid", "p-3", "mb-3", "border", "border-2", "rounded", "bg-body");  // adding class attribute (styling)
         teddyFigure.appendChild(teddyUrl);  // adding the image inside the <article> element
         
         const teddyDescription = document.createElement("figcaption");  // defining an <figcaption> element for the product
         teddyDescription.textContent = teddy.description;  // filling the <figcaption> element with the description text
+        teddyDescription.classList.add("lead", "p-2", "fw-normal");  // adding class attribute (styling)
         teddyFigure.appendChild(teddyDescription);  // adding the <figcaption> in the <figure> element
         /* --- Product description [x] --- */
 
 
-        /* --- Product color [o] --- */
-        const teddyColorDiv = document.createElement("div");
-        teddyProduct.appendChild(teddyColorDiv);
+        /* --- Product customisation [o] --- */
+        const teddyCustomDiv = document.createElement("div");
+        teddyCustomDiv.classList.add("col-md-4", "p-3", "text-center");  // adding class attribute (styling)
+        teddyProduct.appendChild(teddyCustomDiv);
 
         const teddyColorLabel = document.createElement("label");  // defining a <label> element linked to color <select>
         teddyColorLabel.setAttribute("for", "select-color");
         teddyColorLabel.textContent = "Couleur :";
-        teddyColorDiv.appendChild(teddyColorLabel);
+        teddyColorLabel.classList.add("p-2", "fw-bold");  // adding class attribute (styling)
+        teddyCustomDiv.appendChild(teddyColorLabel);
 
         const teddyColorSelect = document.createElement("select");  // defining a <select> element to choose between product colors
-        teddyColorSelect.setAttribute("id", "select-color");  // setting and ID for the <input>
-        teddyColorSelect.setAttribute("name", "select-color");  // setting and ID for the <input>
-        teddyColorDiv.appendChild(teddyColorSelect);  // adding the image inside the <article> element
+        teddyColorSelect.setAttribute("id", "select-color");  // setting and ID for the <select>
+        teddyColorSelect.setAttribute("name", "select-color");  // setting and ID for the <select>
+        teddyColorSelect.classList.add("form-select", "form-select-lg", "mb-4");  // adding class attribute (styling)
+        teddyCustomDiv.appendChild(teddyColorSelect);  // adding the image inside the <article> element
 
         const colors = teddy.colors; 
         // console.log(colors);
@@ -61,22 +72,19 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
             teddyColorOption.textContent = color;  // filling the <option> element with the color
             teddyColorSelect.appendChild(teddyColorOption);  // adding the <option> element inside the <select> element
         }
-        /* --- Product color [x] --- */
-
-
-        /* --- Product quantity [o] --- */
-        const teddyQuantityDiv = document.createElement("div");
-        teddyProduct.appendChild(teddyQuantityDiv);
+        
 
         const teddyQuantityLabel = document.createElement("label");  // defining a <label> element linked to quantity <select>
         teddyQuantityLabel.setAttribute("for", "select-quantity");
         teddyQuantityLabel.textContent = "Quantité :";
-        teddyQuantityDiv.appendChild(teddyQuantityLabel);
+        teddyQuantityLabel.classList.add("p-2", "fw-bold");  // adding class attribute (styling)
+        teddyCustomDiv.appendChild(teddyQuantityLabel);
 
         const teddyQuantitySelect = document.createElement("select");  // defining a <select> element for quantity
         teddyQuantitySelect.setAttribute("id", "select-quantity");  // setting and ID for the <input>
         teddyQuantitySelect.setAttribute("name", "select-quantity");  // setting and ID for the <input>
-        teddyQuantityDiv.appendChild(teddyQuantitySelect);  // adding the <input> inside the <article> element
+        teddyQuantitySelect.classList.add("form-select", "form-select-lg", "mb-4");  // adding class attribute (styling)
+        teddyCustomDiv.appendChild(teddyQuantitySelect);  // adding the <input> inside the <article> element
 
         const quantities = [1, 2, 3, 4, 5];
         for (const quantity of quantities) {
@@ -91,30 +99,22 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
         /* --- Product price [o] --- */
         const teddyPrice = document.createElement("p");  // defining a <p> element for each product
         teddyPrice.textContent = (teddy.price / 100) + ",00€";  // filling the paragraph with the price displayed in euros
-        teddyProduct.appendChild(teddyPrice);  // adding the price inside the <article> element
+        teddyPrice.classList.add("fs-1");  // adding class attribute (styling)
+        teddyCustomDiv.appendChild(teddyPrice);  // adding the price inside the <article> element
         /* --- Product price [x] --- */
         
 
 
 
         /* --------- Add to cart [o] --------- */
-        document.getElementById("product");  // targeting the "product" <section>
-        
-        const toCart = document.createElement("div");  // defining an <div> element
-        toCart.setAttribute("class", "validation"); // defining a class attribute to the <div> element
-        product.appendChild(toCart);  // adding the <div> inside the "product" <section>
-
-        /*
-        const messageToCart = document.createElement("p");  // defining a <p> tag for validation message : confirmationToCart()
-        toCart.appendChild(messageToCart);  // adding the <p> inside the "product" <section>
-        */
 
         const buttonToCart = document.createElement("button");  // defining a <button> element
         buttonToCart.setAttribute("id", "btn__cart");  // defining an ID for the <button>
         buttonToCart.setAttribute("name", "add-to-cart");  // defining a name for the <button>
         buttonToCart.setAttribute("type", "submit");  // defining the "submit" type for the <button>
         buttonToCart.textContent = "Ajouter au panier";  // filling the <button> with text
-        toCart.appendChild(buttonToCart);  // adding the <button> to the <div> tag
+        buttonToCart.classList.add("btn", "btn-primary", "btn-lg", "m-3", "fw-bold", "text-center");  // adding class attribute (styling)
+        teddyCustomDiv.appendChild(buttonToCart);  // adding the <button> to the <div> tag
 
 
         /* --- Sending informations to LocalStorage [o] --- */

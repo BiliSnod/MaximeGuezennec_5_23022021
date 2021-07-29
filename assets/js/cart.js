@@ -11,6 +11,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     // console.log("Le panier est vide")
     const nothingInCart = document.createElement("p");
     nothingInCart.textContent = "Votre panier ne contient aucun article.";
+    nothingInCart.classList.add("m-3");  // adding class attribute (styling)
     cartContent.appendChild(nothingInCart);
     // console.log(nothingInCart);
 
@@ -23,7 +24,8 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     // console.log("total", allPriceSums)
 
     const listOfProducts = document.createElement("div");
-    listOfProducts.setAttribute("class", "cart-products d-inline-flex flex-wrap");
+    listOfProducts.setAttribute("class", "cart-products");
+    listOfProducts.classList.add("d-flex", "flex-wrap");  // adding class attribute (styling)
     cartContent.appendChild(listOfProducts);
 
     // console.log("productsInStorage.length", productsInStorage.length)
@@ -32,7 +34,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
         /* --- Product in cart structure --- */
         const productInCart = document.createElement("article");
-        productInCart.setAttribute("class", "m-3 p-4-sm");
+        productInCart.classList.add("mx-auto", "m-3", "p-2", "border", "rounded-3", "bg-body", "text-center");  // adding class attribute (styling)
         listOfProducts.appendChild(productInCart);
 
         const productInCartTitle = document.createElement("h2");  // displaying product name
@@ -47,12 +49,13 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCartImage.setAttribute("src", productInStorage.sentProductUrl);
         productInCartImage.setAttribute("alt", `${productInStorage.sentProductName} ajouté au panier`);
         productInCartImage.setAttribute("height", 80);
+        productInCartImage.classList.add("img-thumbnail", "image-mid-height");  // adding class attribute (styling)
         returnToProductPage.appendChild(productInCartImage);
-        /*
+        
         const productColorOption = document.createElement("p");  // displaying product color
         productColorOption.textContent = `Couleur : ${productInStorage.sentProductColor}`;
         productInCart.appendChild(productColorOption);
-        */
+        
         const productInCartQuantity = document.createElement("p");  // displaying product quantity
         productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;
         productInCart.appendChild(productInCartQuantity);
@@ -75,6 +78,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCartDelete.setAttribute("name", "delete-product");
         productInCartDelete.setAttribute("type", "button");
         productInCartDelete.textContent = "Supprimer";
+        productInCartDelete.classList.add("btn", "btn-success", "fw-bold");  // adding class attribute (styling)
         productInCart.appendChild(productInCartDelete);
 
         const productToDelete = productsInStorage.indexOf(productInStorage);  // determining the position of the product in LocalStorage's "products" array
@@ -108,6 +112,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     const cartDisplayTotal = document.createElement("div");
     cartDisplayTotal.setAttribute("id", "total-price");
     cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;
+    cartDisplayTotal.classList.add("fs-1", "text-center");  // adding class attribute (styling)
     cartContent.appendChild(cartDisplayTotal);
     /* --- Displaying cart total price [x] --- */
 
@@ -117,8 +122,9 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     emptyCartButton.setAttribute("id", "btn__empty-cart");
     emptyCartButton.setAttribute("name", "empty-cart");
     emptyCartButton.setAttribute("type", "button");
-    emptyCartButton.textContent = "Vider le panier";
-    cartContent.appendChild(emptyCartButton);
+    emptyCartButton.textContent = "Supprimer tous les articles";
+    emptyCartButton.classList.add("btn", "btn-success", "btn-lg", "fw-bold");  // adding class attribute (styling)
+    cartDisplayTotal.appendChild(emptyCartButton);
 
     emptyCart = document.querySelector("#btn__empty-cart");
     emptyCart.addEventListener("click", (event) =>{  // what will happen on <button> click
@@ -164,11 +170,11 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             if (condition) {
                 document.querySelector(`.${selector}--error`).textContent = "";  // hiding the message next to the field when it is valid
                 console.log("selector", selector);
-                document.querySelector(`#${selector}`).style.removeProperty("border-color");  // displaying visual cue on the invalid field
+                document.querySelector(`#${selector}`).style.removeProperty("background-color");  // displaying visual cue on the invalid field
                 return true;
             } else {
                 document.querySelector(`.${selector}--error`).textContent = "Champs à corriger.";  // displaying a message next to the invalid field
-                document.querySelector(`#${selector}`).style.borderColor = "red";  // displaying visual cue on the invalid field
+                document.querySelector(`#${selector}`).style.backgroundColor = "#d98531";  // displaying visual cue on the invalid field
                 return false;
             };
         };

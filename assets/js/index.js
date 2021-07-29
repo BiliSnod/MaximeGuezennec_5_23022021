@@ -19,7 +19,7 @@ fetch("http://localhost:3000/api/teddies")  // getting the API's data
             teddyUrl.setAttribute("src", teddy.imageUrl);  // filling the src attribute with the URL
             teddyUrl.setAttribute("height", "200");  // TEMPORARY
             teddyUrl.setAttribute("alt", `Peluche ${teddy.name}`);  // filling the alt attribute with a description
-            teddyUrl.classList.add("img-fluid", "overflow-auto", "p-3", "mb-5", "border", "border-2", "rounded", "bg-body");  // adding class attribute (styling)
+            teddyUrl.classList.add("image-height", "img-fluid", "overflow-hidden", "p-3", "mb-5", "border", "border-2", "rounded", "bg-body");  // adding class attribute (styling)
             teddyProduct.appendChild(teddyUrl);  // adding the image inside the <article> element
             /* ------ */
 
@@ -33,7 +33,7 @@ fetch("http://localhost:3000/api/teddies")  // getting the API's data
             /* --- Products price --- */
             const teddyPrice = document.createElement("p");  // defining a <p> tag for each product
             teddyPrice.textContent = (teddy.price / 100) + ",00€";  // filling the paragraph with the price displayed in euros
-            teddyPrice.classList.add("mx-auto", "fw-bold");  // adding class attribute (styling)
+            teddyPrice.classList.add("mx-auto", "fw-bold", "fs-4");  // adding class attribute (styling)
             teddyProduct.appendChild(teddyPrice);  // adding the <p> tag inside the <article> element
             /* ------ */
         }

@@ -19,7 +19,8 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
 
     /* --- Displaying an error message [o] --- */
     const emptyOrder = document.createElement("p");
-    emptyOrder.innerHTML = `<a href="product.html?id=5be9c8541c9d440000665243">Norbert</a> et ses amis se sentent seuls&hellip;`;
+    emptyOrder.innerHTML = `<a href="product.html?id=5be9c8541c9d440000665243">Norbert</a> et ses amis se sentent seuls&hellip;`;                     
+    emptyOrder.classList.add("p-4", "fs-5");  // adding class attribute (styling)
     orderContent.appendChild(emptyOrder);
     /* --- Displaying an error message [x] --- */
 
@@ -41,10 +42,11 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
     const orderResult = document.getElementById("order");
 
     const displayOrder = document.createElement("div");
-    displayOrder.innerHTML =   `<p>Merci !</p>
+    displayOrder.innerHTML =   `<p class="fs-5">Merci !</p>
                                 <p>Votre commande <i>n°${getOrderId}</i> d'un montant total de <b>${getOrderAmount},00&euro;</b> a bien été enregistrée.</p>
                                 <p>Vous recevrez un mail de confirmation, et serez tenu informé du suivi de votre commande.</p>
-                                <p>À bientôt sur Orinoco !</p>`;
+                                <p>À bientôt sur Orinoco !</p>`;                                
+    displayOrder.classList.add("p-4");  // adding class attribute (styling)
     orderResult.appendChild(displayOrder);
     /* --- Displaying order informations for customer [x] --- */
 
