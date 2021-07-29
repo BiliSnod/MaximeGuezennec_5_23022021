@@ -47,6 +47,14 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
                                 <p>À bientôt sur Orinoco !</p>`;
     orderResult.appendChild(displayOrder);
     /* --- Displaying order informations for customer [x] --- */
+
+
+    /* --- Emptying LocalStorage [o] --- */
+    function clearStorage() {
+        localStorage.clear();
+    }
+    clearStorage();
+        /* --- Emptying LocalStorage [x] --- */
 }
 
 /* ------------ Order confirmation status [x] ------------ */

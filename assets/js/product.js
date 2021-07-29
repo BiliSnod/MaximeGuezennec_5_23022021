@@ -1,5 +1,5 @@
-let params = new URLSearchParams(document.location.search);  // searching a parameter in the active page url
-let productId = params.get("id");  // getting the value of the "id" parameter
+let params = new URLSearchParams(document.location.search);  // searching a parameter in the active page URL
+let productId = params.get("id");  // getting the value of the "id" parameter in URL
 // console.log("product ID :", productId);
 
 
@@ -42,7 +42,7 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
         const teddyColorDiv = document.createElement("div");
         teddyProduct.appendChild(teddyColorDiv);
 
-        const teddyColorLabel = document.createElement("label");
+        const teddyColorLabel = document.createElement("label");  // defining a <label> element linked to color <select>
         teddyColorLabel.setAttribute("for", "select-color");
         teddyColorLabel.textContent = "Couleur :";
         teddyColorDiv.appendChild(teddyColorLabel);
@@ -65,12 +65,20 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
 
 
         /* --- Product quantity [o] --- */
+        const teddyQuantityDiv = document.createElement("div");
+        teddyProduct.appendChild(teddyQuantityDiv);
+
+        const teddyQuantityLabel = document.createElement("label");  // defining a <label> element linked to quantity <select>
+        teddyQuantityLabel.setAttribute("for", "select-quantity");
+        teddyQuantityLabel.textContent = "Quantité :";
+        teddyQuantityDiv.appendChild(teddyQuantityLabel);
+
         const teddyQuantitySelect = document.createElement("select");  // defining a <select> element for quantity
         teddyQuantitySelect.setAttribute("id", "select-quantity");  // setting and ID for the <input>
         teddyQuantitySelect.setAttribute("name", "select-quantity");  // setting and ID for the <input>
-        teddyProduct.appendChild(teddyQuantitySelect);  // adding the <input> inside the <article> element
+        teddyQuantityDiv.appendChild(teddyQuantitySelect);  // adding the <input> inside the <article> element
 
-        const quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const quantities = [1, 2, 3, 4, 5];
         for (const quantity of quantities) {
             const teddyQuantityNumber = document.createElement("option");  // defining an <option> element for quantity
             teddyQuantityNumber.setAttribute("value", quantity);  // filling the value attribute with the quantity
@@ -143,50 +151,45 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
 
             const confirmationToCart = () => {
                 window.alert("Votre sélection a été ajoutée au panier");  // displaying an alert box when products are added to cart
-                /* --------- 
-                document.querySelector(".validation");
-                messageToCart.textContent = "Votre sélection a été ajoutée au panier";
-                */
             };
 
-
+            /* --- Declaring a function to add quantity to existing products or adding a new one [o] --- */
             function updateQuantityInStorage(newProduct) {
-                for (const productInStorage of productsInStorage) {
-                    if (productInStorage.sentProductId === newProduct.sentProductId) {
-                        console.log("productInStorage.sentProductId", productInStorage.sentProductId);
-                        console.log("teddy._id", teddy._id);
-                        console.log("productInStorage.sentProductQuantity", productInStorage.sentProductQuantity);
+            // console.log("teddy._id", teddy._id)
+                for (const productInStorage of productsInStorage) {  // iterating through "products" in LocalStorage
+                    console.log("productsInStorage.length", productsInStorage.length);
+                    if (productInStorage.sentProductId === newProduct.sentProductId) {  // condition for updating the quantity of the existing product
+                        console.log("ADD QUANTITY")
+                        console.log("productInStorage", productInStorage);
+                        console.log("newProduct.sentProductQuantity", newProduct.sentProductQuantity);
                         productInStorage.sentProductQuantity += newProduct.sentProductQuantity;
-                        console.log("productsInStorage", productsInStorage)
-                        confirmationToCart();
-                        return;                       
-                    } else {
+                        console.log("productInStorage.sentProductQuantity", productInStorage.sentProductQuantity);
+                        confirmationToCart();   
+                        return;  
+                    } else {  // when there is no matching product in LocalStorage
+                        console.log("ADD NEW PRODUCT")
+                        console.log("productInStorage", productInStorage);  // PROBLEM : doesn't seem to iterate, returns only one product, doesn't find existing match and create duplicate entry
                         addProductLocalStorage();
                         confirmationToCart();
-                    }
+                        return;
+                    };
                 };
             };
-
+            /* --- Declaring a function to add quantity to existing products or adding a new one [x] --- */
             
             /* --- Checking data in LocalStorage [o] --- */
             if (productsInStorage) {  // defining what to do when there is existing data in LocalStorage
-                /*
-                for (const productInStorage of productsInStorage) {
-                    if (productInStorage.sentProductId === teddy._id) { // works only when existing data = replace existing values
-                        console.log("productInStorage.sentProductId", productInStorage.sentProductId);
-                        console.log("teddy._id", teddy._id);
-                        console.log("productInStorage.sentProductQuantity", productInStorage.sentProductQuantity);
-                        roductInStorage.sentProductQuantity++;
-                        console.log("productInStorage.sentProductQuantity", productInStorage.sentProductQuantity);
-                    }
-                }
-                */
+                console.log("SOMETHING IN CART")
                 updateQuantityInStorage(sendingProductInformations);
                 localStorage.setItem("products", JSON.stringify(productsInStorage));
+                // location.reload();
             } else {  // defining what to do when LocalStorage is empty
                 productsInStorage = [];  // creating an empty array to store informations to send
+                console.log("CART IS EMPTY")
                 addProductLocalStorage();
                 confirmationToCart();
+                console.log("CART NOT EMPTY ANYMORE");
+                // location.reload();
             }
             /* --- Checking data in LocalStorage [x] --- */
         });
