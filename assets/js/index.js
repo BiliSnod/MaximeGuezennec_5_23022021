@@ -17,7 +17,6 @@ fetch("http://localhost:3000/api/teddies")  // getting the API's data
             /* --- Products image --- */
             const teddyUrl = document.createElement("img");  // defining an <img> element for each product
             teddyUrl.setAttribute("src", teddy.imageUrl);  // filling the src attribute with the URL
-            teddyUrl.setAttribute("height", "200");  // TEMPORARY
             teddyUrl.setAttribute("alt", `Peluche ${teddy.name}`);  // filling the alt attribute with a description
             teddyUrl.classList.add("image-height", "img-fluid", "overflow-hidden", "p-3", "mb-5", "border", "border-2", "rounded", "bg-body");  // adding class attribute (styling)
             teddyProduct.appendChild(teddyUrl);  // adding the image inside the <article> element

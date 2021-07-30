@@ -48,7 +48,6 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         const productInCartImage = document.createElement("img");  // displaying product picture
         productInCartImage.setAttribute("src", productInStorage.sentProductUrl);
         productInCartImage.setAttribute("alt", `${productInStorage.sentProductName} ajouté au panier`);
-        productInCartImage.setAttribute("height", 80);
         productInCartImage.classList.add("img-thumbnail", "image-mid-height");  // adding class attribute (styling)
         returnToProductPage.appendChild(productInCartImage);
         
@@ -62,7 +61,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
 
         /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
-        sumOfProductPrice = productInStorage.sentProductPrice * productInStorage.sentProductQuantity;
+        const sumOfProductPrice = productInStorage.sentProductPrice * productInStorage.sentProductQuantity;
         allPriceSums.push(sumOfProductPrice);
         /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
 
@@ -126,7 +125,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     emptyCartButton.classList.add("btn", "btn-success", "btn-lg", "fw-bold");  // adding class attribute (styling)
     cartDisplayTotal.appendChild(emptyCartButton);
 
-    emptyCart = document.querySelector("#btn__empty-cart");
+    const emptyCart = document.querySelector("#btn__empty-cart");
     emptyCart.addEventListener("click", (event) =>{  // what will happen on <button> click
         event.preventDefault();  // preventing normal button behavior
         localStorage.clear();  // deleting all entries of LocalStorage
@@ -245,7 +244,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
                     };
 
                     localStorage.setItem("order", JSON.stringify(orderInformations));
-                    //console.log("orderInformations", orderInformations);
+                    // console.log("orderInformations", orderInformations);
                     /* --- Sending ID created by the server for the order with total price to LocalStorage [x] --- */
                     
                     /* --- Redirect to the order confirmation page [o] --- */

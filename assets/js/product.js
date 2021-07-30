@@ -6,6 +6,7 @@ let productId = params.get("id");  // getting the value of the "id" parameter in
 fetch(`http://localhost:3000/api/teddies/${productId}`)
     .then(result => result.json())
     .then(teddy => {
+        console.log(teddy)
         /* --- Product title [o] --- */
         document.title = `Commandez ${teddy.name} - Ours en peluche faits à la main - Oripeluche par Orinoco`;
         
@@ -34,7 +35,6 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
         
         const teddyUrl = document.createElement("img");  // defining an <img> element for each product
         teddyUrl.setAttribute("src", teddy.imageUrl);  // filling the "src" attribute with the image URL
-        teddyUrl.setAttribute("height", "320");  // TEMPORARY
         teddyUrl.setAttribute("alt", `Peluche ${teddy.name}`);  // filling the alt attribute with a description
         teddyUrl.classList.add("lead", "img-fluid", "p-3", "mb-3", "border", "border-2", "rounded", "bg-body");  // adding class attribute (styling)
         teddyFigure.appendChild(teddyUrl);  // adding the image inside the <article> element
