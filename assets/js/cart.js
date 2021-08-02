@@ -11,7 +11,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     // console.log("Le panier est vide")
     const nothingInCart = document.createElement("p");
     nothingInCart.textContent = "Votre panier ne contient aucun article.";
-    nothingInCart.classList.add("m-3");  // adding class attribute (styling)
+    nothingInCart.classList.add("m-2", "p-4", "fs-5");  // adding class attribute (styling)
     cartContent.appendChild(nothingInCart);
     // console.log(nothingInCart);
 
@@ -129,7 +129,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     emptyCart.addEventListener("click", (event) =>{  // what will happen on <button> click
         event.preventDefault();  // preventing normal button behavior
         localStorage.clear();  // deleting all entries of LocalStorage
-        window.alert("Le panier est vide.");
+        window.alert("Le panier est désormais vide.");
         location.reload();  // reloading the page
     });
     /* --- Emptying cart [x] --- */

@@ -20,7 +20,7 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
     /* --- Displaying an error message [o] --- */
     const emptyOrder = document.createElement("p");
     emptyOrder.innerHTML = `<a href="product.html?id=5be9c8541c9d440000665243">Norbert</a> et ses amis se sentent seuls&hellip;`;                     
-    emptyOrder.classList.add("p-4", "fs-5");  // adding class attribute (styling)
+    emptyOrder.classList.add("m-2", "p-4", "fs-5");  // adding class attribute (styling)
     orderContent.appendChild(emptyOrder);
     /* --- Displaying an error message [x] --- */
 
