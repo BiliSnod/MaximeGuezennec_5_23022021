@@ -6,15 +6,14 @@ let productId = params.get("id");  // getting the value of the "id" parameter in
 fetch(`http://localhost:3000/api/teddies/${productId}`)
     .then(result => result.json())
     .then(model => {  // elements to display on page for the chosen model
-        console.log("model", model);
+        console.log("model.name", model.name);
         /* --- Product title [o] --- */
-        document.title = `Commandez ${model.name} - Ours en peluche faits à la main - Oripeluche par Orinoco`;
-        
-        const modelTitleMain = document.querySelector("#title");
-        const modelTitle = document.createElement("h1"); // defining a <h1> element for the product
-        modelTitle.textContent = `Commandez ${model.name}, parmi nos peluches faites-main`;  // filling the <h1> element with the product name
-        modelTitle.classList.add("text-center", "text-light");  // adding class attribute (styling)
-        modelTitleMain.appendChild(modelTitle);  // adding the title inside the <article> element
+        if (model.name !== undefined) {  // preventing display of "undefined" in titles for a non-existent productId
+            document.title = `Commandez ${model.name} - Ours en peluche faits à la main - Oripeluche par Orinoco`;  // setting a dynamic page title
+            
+            const modelTitleMain = document.querySelector("h1");
+            modelTitleMain.textContent = `Commandez ${model.name}, parmi nos peluches faites-main`;  // filling the <h1> element with the product name
+        };
         /* --- Product title [x] --- */
 
 
