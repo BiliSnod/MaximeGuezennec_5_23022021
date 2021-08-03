@@ -29,7 +29,7 @@
 /* --- Overriding Bootstrap border colors [o] --- */
 
 .border {
-    border-color: #D5CDD4!important;
+    border-color: #d5cdd4!important;
 }
 
 /* --- Overriding Bootstrap border colors [x] --- */
@@ -42,7 +42,7 @@
 }
 
 .link-dark:hover, .link-dark:focus {
-    color : #5706FE!important;
+    color : #5706fe!important;
 }
 
 /* --- Overriding Bootstrap links colors x] --- */
@@ -51,8 +51,8 @@
 /* --- Overriding Bootstrap button colors [o] --- */
 
 .btn-primary {
-    background-color: #5706FE!important;
-    border-color: #5706FE!important;
+    background-color: #5706fe!important;
+    border-color: #5706fe!important;
 }
 
 .btn-primary:hover, .btn-primary:focus {

@@ -50,11 +50,11 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         returnToProductPage.appendChild(productInCartImage);  // adding the element in the link
 
         const productVariationOption = document.createElement("p");  // displaying product variation
-        productVariationOption.textContent = `Couleur : ${productInStorage.sentProductVariation}`;  // displaying the variation with value for the product in LocalStorage
+        productVariationOption.innerHTML = `Couleur : <b>${productInStorage.sentProductVariation}</b>`;  // displaying the variation with value for the product in LocalStorage
         productInCart.appendChild(productVariationOption);  // adding the element in the <article>
 
         const productInCartQuantity = document.createElement("p");  // displaying product quantity
-        productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;  // displaying quantity with value for the product in LocalStorage
+        productInCartQuantity.innerHTML = `Quantité : <b>${productInStorage.sentProductQuantity}</b>`;  // displaying quantity with value for the product in LocalStorage
         productInCart.appendChild(productInCartQuantity);  // adding the element in the <article>
 
 
@@ -64,7 +64,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
 
         const productInCartPrice = document.createElement("p");  // displaying product price...
-        productInCartPrice.textContent = `Prix : ${sumOfProductPrice},00€`;  // ...in euros
+        productInCartPrice.innerHTML = `Prix : <b><i>${sumOfProductPrice},00€</i></b>`;  // ...in euros
         productInCart.appendChild(productInCartPrice);  // adding the element in the <article>
 
 
@@ -244,7 +244,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
             document.querySelector("#cart-invalid").textContent = "Tous les champs ne sont pas correctement renseignés.";  // displaying a message on top of the button
 
-        }
+        };
         /* ------ Required conditions to accept customer form data [x] ------ */
 
     });
@@ -252,6 +252,6 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
     /* --------- Cart and customer form validation [x] --------- */
 
 
-}
+};
 
 /* ------------ Cart content [x] ------------ */
