@@ -1,150 +1,143 @@
-let productsInStorage = JSON.parse(localStorage.getItem("products"));
-// console.log("productsInStorage", productsInStorage);
+let productsInStorage = JSON.parse(localStorage.getItem("products"));  // getting LocalStorage "products" object
+
 
 
 /* ------------ Cart content [o] ------------ */
-const cartContent = document.querySelector("#cart");
+
+const cartContent = document.querySelector("#cart");  // targeting the "cart" <section> element
 
 
 if (productsInStorage === null) {  // displaying a message if LocalStorage is empty
 
-    // console.log("Le panier est vide")
-    const nothingInCart = document.createElement("p");
-    nothingInCart.textContent = "Votre panier ne contient aucun article.";
-    nothingInCart.classList.add("m-2", "p-4", "fs-5");  // adding class attribute (styling)
-    cartContent.appendChild(nothingInCart);
-    // console.log(nothingInCart);
+    const nothingInCart = document.createElement("p");  // creating a <p> tag to display message
+    nothingInCart.textContent = "Votre panier ne contient aucun article.";  // message to display
+    nothingInCart.classList.add("m-2", "p-4", "fs-5");  // adding a "class" attribute for styling
+    cartContent.appendChild(nothingInCart);  // adding the element inside the "cart" <section> element
 
     document.getElementById("customer-form").style.display = "none";  // hiding the form when cart is empty
     document.getElementById("customer-form").setAttribute("aria-hidden", "true");  // hiding the form from readers
 
+
 } else {  // displaying the products in cart with informations stored in LocalStorage
 
-    let allPriceSums = [];  // defining an array to get all total price for each product 
-    // console.log("total", allPriceSums)
+    let allPriceSums = [];  // defining an array to get price for each product
 
-    const listOfProducts = document.createElement("div");
-    listOfProducts.setAttribute("class", "cart-products");
-    listOfProducts.classList.add("d-flex", "flex-wrap");  // adding class attribute (styling)
-    cartContent.appendChild(listOfProducts);
+    const listOfProducts = document.createElement("div");  // creating a <div> tag to display the products in cart
+    listOfProducts.classList.add("d-flex", "flex-wrap");  // adding a "class" attribute for styling
+    cartContent.appendChild(listOfProducts);  // adding the tag inside the "cart" <section> element
 
-    // console.log("productsInStorage.length", productsInStorage.length)
+
+    /* --------- Product in cart structure [o] --------- */
+
     productsInStorage.forEach(productInStorage => {  // what to do for each object of LocalStorage "products" array
-    // console.log("productInStorage", productInStorage)        
 
-        /* --- Product in cart structure --- */
-        const productInCart = document.createElement("article");
-        productInCart.classList.add("mx-auto", "m-3", "p-2", "border", "rounded-3", "bg-body", "text-center");  // adding class attribute (styling)
-        listOfProducts.appendChild(productInCart);
+        const productInCart = document.createElement("article");  //
+        productInCart.classList.add("mx-auto", "m-3", "p-2", "border", "rounded-3", "bg-body", "text-center");  // adding a "class" attribute for styling
+        listOfProducts.appendChild(productInCart);  // adding the element inside the <div> with all products in cart
 
-        const productInCartTitle = document.createElement("h2");  // displaying product name
-        productInCartTitle.textContent = `${productInStorage.sentProductName}`;
-        productInCart.appendChild(productInCartTitle);
+        const productInCartTitle = document.createElement("h2");  // displaying product name in a <h2> element
+        productInCartTitle.textContent = `${productInStorage.sentProductName}`;  // filling the title with the name of the product in LocalStorage
+        productInCart.appendChild(productInCartTitle);  // adding the element in the <article>
 
         const returnToProductPage = document.createElement("a");  // creating a link on the picture to go on the product page
-        returnToProductPage.setAttribute("href", `product.html?id=${productInStorage.sentProductId}`);
-        productInCart.appendChild(returnToProductPage);
+        returnToProductPage.setAttribute("href", `product.html?id=${productInStorage.sentProductId}`);  // defining the URL with the ID in of the product in LocalStorage
+        productInCart.appendChild(returnToProductPage);  // adding the element in the <article>
 
         const productInCartImage = document.createElement("img");  // displaying product picture
-        productInCartImage.setAttribute("src", productInStorage.sentProductUrl);
-        productInCartImage.setAttribute("alt", `${productInStorage.sentProductName} ajouté au panier`);
-        productInCartImage.classList.add("img-thumbnail", "image-mid-height");  // adding class attribute (styling)
-        returnToProductPage.appendChild(productInCartImage);
-        
-        const productColorOption = document.createElement("p");  // displaying product color
-        productColorOption.textContent = `Couleur : ${productInStorage.sentProductColor}`;
-        productInCart.appendChild(productColorOption);
-        
+        productInCartImage.setAttribute("src", productInStorage.sentProductUrl);  // defining the "src" attribute with the image URL of the product in LocalStorage
+        productInCartImage.setAttribute("alt", `${productInStorage.sentProductName} ajouté au panier`);  // defining the "alt" attribute
+        productInCartImage.classList.add("img-thumbnail", "image-mid-height");  // adding a "class" attribute for styling
+        returnToProductPage.appendChild(productInCartImage);  // adding the element in the link
+
+        const productVariationOption = document.createElement("p");  // displaying product variation
+        productVariationOption.textContent = `Couleur : ${productInStorage.sentProductVariation}`;  // displaying the variation with value for the product in LocalStorage
+        productInCart.appendChild(productVariationOption);  // adding the element in the <article>
+
         const productInCartQuantity = document.createElement("p");  // displaying product quantity
-        productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;
-        productInCart.appendChild(productInCartQuantity);
+        productInCartQuantity.textContent = `Quantité : ${productInStorage.sentProductQuantity}`;  // displaying quantity with value for the product in LocalStorage
+        productInCart.appendChild(productInCartQuantity);  // adding the element in the <article>
 
 
         /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
         const sumOfProductPrice = productInStorage.sentProductPrice * productInStorage.sentProductQuantity;
-        allPriceSums.push(sumOfProductPrice);
+        allPriceSums.push(sumOfProductPrice);  // adding the sum to the array
         /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
 
-        const productInCartPrice = document.createElement("p");  // displaying product price
-        productInCartPrice.textContent = `Prix : ${sumOfProductPrice},00€`;
-        productInCart.appendChild(productInCartPrice);
+        const productInCartPrice = document.createElement("p");  // displaying product price...
+        productInCartPrice.textContent = `Prix : ${sumOfProductPrice},00€`;  // ...in euros
+        productInCart.appendChild(productInCartPrice);  // adding the element in the <article>
 
 
         /* --- Deleting a product [o] --- */
-        const productInCartDelete = document.createElement("button");  // defining a button to delete product from cart
-        productInCartDelete.setAttribute("id", `delete-${productInStorage.sentProductId}`);
-        productInCartDelete.setAttribute("class", "btn__delete-product");
-        productInCartDelete.setAttribute("name", "delete-product");
-        productInCartDelete.setAttribute("type", "button");
-        productInCartDelete.textContent = "Supprimer";
-        productInCartDelete.classList.add("btn", "btn-success", "fw-bold");  // adding class attribute (styling)
-        productInCart.appendChild(productInCartDelete);
+        const productInCartDelete = document.createElement("button");  // creating a button element to delete product from cart
+        productInCartDelete.setAttribute("class", "btn__delete-product");  // defining a class for the button
+        productInCartDelete.setAttribute("name", "delete-product");  // defining the name of the button
+        productInCartDelete.setAttribute("type", "button");  // defining the type of the button
+        productInCartDelete.textContent = "Supprimer";  // filling button's text
+        productInCartDelete.classList.add("btn", "btn-success", "fw-bold");  // adding a "class" attribute for styling
+        productInCart.appendChild(productInCartDelete);  // adding the element in the <article>
 
         const productToDelete = productsInStorage.indexOf(productInStorage);  // determining the position of the product in LocalStorage's "products" array
-        // console.log("productToDelete", productToDelete);
 
-        // console.log("productInCartDelete", productInCartDelete);
         productInCartDelete.addEventListener("click", (event) =>{  // what is happening when a <button> clicked
-            // console.log("productsInStorage", productsInStorage);
             const deleteProduct = productsInStorage.splice(productToDelete, 1);  // deleting the product in LocalStorage's "products" array
             localStorage.setItem("products", JSON.stringify(productsInStorage));  // updating LocalStorage
-            // console.log("deleteProduct", deleteProduct);
             if (productsInStorage.length === 0) {  // if LocalStorage's "products" array is empty
                 localStorage.removeItem("products");  // remove LocalStorage's "products" array to avoid displaying an empty product
-            }
-            // console.log("productsInStorage", productsInStorage);
+            };
             location.reload();  // reload the page to update positions in LocalStorage's "products" array
         });
         /* --- Deleting a product [x] --- */
-        /* --- Product in cart structure [x] --- */
+
     });
+
+    /* --------- Product in cart structure [x] --------- */
 
 
     /* --- Calculating cart total price [o] --- */
     const totalCartPrice = allPriceSums.reduce(function (accumulator, currentValue) {
-        return accumulator + currentValue
-    }, 0);
-    // console.log("total", totalCartPrice);
+        return accumulator + currentValue;
+    }, 0);  // initial value
     /* --- Calculating cart total price [x] --- */
 
     /* --- Displaying cart total price [o] --- */
-    const cartDisplayTotal = document.createElement("div");
-    cartDisplayTotal.setAttribute("id", "total-price");
-    cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;
-    cartDisplayTotal.classList.add("fs-1", "text-center");  // adding class attribute (styling)
-    cartContent.appendChild(cartDisplayTotal);
+    const cartDisplayTotal = document.createElement("div"); // creating a <div> tag
+    cartDisplayTotal.setAttribute("id", "total-price");  // defining an ID for cart total price
+    cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;  // filling the tag with the price in euros
+    cartDisplayTotal.classList.add("fs-1", "text-center");  // adding a "class" attribute for styling
+    cartContent.appendChild(cartDisplayTotal);  // adding the tag inside the "cart" <section> element
     /* --- Displaying cart total price [x] --- */
 
 
     /* --- Emptying cart [o] --- */
-    const emptyCartButton = document.createElement("button"); // defining a <button> element to clear cart content
-    emptyCartButton.setAttribute("id", "btn__empty-cart");
-    emptyCartButton.setAttribute("name", "empty-cart");
-    emptyCartButton.setAttribute("type", "button");
-    emptyCartButton.textContent = "Supprimer tous les articles";
-    emptyCartButton.classList.add("btn", "btn-success", "btn-lg", "fw-bold");  // adding class attribute (styling)
-    cartDisplayTotal.appendChild(emptyCartButton);
+    const emptyCartButton = document.createElement("button"); // creating a <button> element to clear cart content
+    emptyCartButton.setAttribute("id", "btn__empty-cart");  // defining an ID for the button
+    emptyCartButton.setAttribute("name", "empty-cart");  // defining a "name" attribute for the button
+    emptyCartButton.setAttribute("type", "button");  // defining at "type" attribute for the button
+    emptyCartButton.textContent = "Supprimer tous les articles";  // filling the button with text
+    emptyCartButton.classList.add("btn", "btn-success", "btn-lg", "fw-bold");  // adding a "class" attribute for styling
+    cartDisplayTotal.appendChild(emptyCartButton);  // adding the button inside the <div> for cart total price
 
-    const emptyCart = document.querySelector("#btn__empty-cart");
+    const emptyCart = document.querySelector("#btn__empty-cart");  // targeting the button to empty the cart
     emptyCart.addEventListener("click", (event) =>{  // what will happen on <button> click
-        event.preventDefault();  // preventing normal button behavior
         localStorage.clear();  // deleting all entries of LocalStorage
-        window.alert("Le panier est désormais vide.");
+        window.alert("Le panier est désormais vide.");  // displaying an alert box
         location.reload();  // reloading the page
     });
     /* --- Emptying cart [x] --- */
 
 
 
-    /* --- Cart validation [o] --- */
+    /* --------- Cart and customer form validation [o] --------- */
 
-    
-    /* --- Sending customer informations to LocalStorage [o] --- */
     confirmCart = document.querySelector("#btn__confirm-cart");
     confirmCart.addEventListener("click", (event) =>{
-                
+
+        event.preventDefault();  // disabling default behavior of "submit" button
+
+
         /* --- Object model for "contact" in LocalStorage [o] --- */
-        const sendingCustomerData = {  // defining an object with the user informations to send to LocalStorage
+        const sendingCustomerData = {  // defining an object with the user informations to send to LocalStorage (values entered in each input of the form)
             firstName: document.querySelector("#input__first-name").value,
             lastName: document.querySelector("#input__last-name").value,
             address: document.querySelector("#input__address").value,
@@ -153,9 +146,9 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         };
         /* --- Object model for "contact" in LocalStorage [x] --- */
 
-        
-        /* --- Checking validity of data entered in the form [o] --- */
-        
+
+        /* ------ Checking validity of data entered in the form [o] ------ */
+
         /* --- Conditions for validation of each field [o] --- */
         const regexFirstName = /^[a-zA-Z-]{2,36}$/.test(sendingCustomerData.firstName);
         const regexLastName = /^[a-zA-Z\.-\s]{2,36}$/.test(sendingCustomerData.lastName);
@@ -168,13 +161,10 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         function checkFormData(condition, selector) {
             if (condition) {
                 document.querySelector(`.${selector}--error`).textContent = "";  // hiding the message next to the field when it is valid
-                console.log("selector", selector);
                 document.querySelector(`#${selector}`).style.removeProperty("background-color");  // displaying visual cue on the invalid field
-                return true;
             } else {
                 document.querySelector(`.${selector}--error`).textContent = "Champs à corriger.";  // displaying a message next to the invalid field
                 document.querySelector(`#${selector}`).style.backgroundColor = "#d98531";  // displaying visual cue on the invalid field
-                return false;
             };
         };
         /* --- Declaring a function to display a message and visual cue if there is error(s) in a field [x] --- */
@@ -186,67 +176,59 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         checkFormData(regexCity, "input__city");
         checkFormData(regexMail, "input__mail");
         /* --- Calling the function for each field [x] --- */
-        
-        /* --- Checking validity of data entered in the form [x] --- */
+
+        /* ------ Checking validity of data entered in the form [x] ------ */
 
 
-        /* --- Required conditions to accept customer form data --- */
-        if (checkFormData(regexFirstName, "input__first-name") && checkFormData(regexLastName, "input__last-name") && checkFormData(regexAddress, "input__address") && checkFormData(regexCity, "input__city") && checkFormData(regexMail, "input__mail")) {
-
-            event.preventDefault();
-            localStorage.setItem("contact", JSON.stringify(sendingCustomerData));  // sending contact object with form data to LocalStorage
-            // console.log("sendingCustomerData", sendingCustomerData);
+        /* ------ Required conditions to accept customer form data [o] ------ */
+        if (regexFirstName && regexLastName && regexAddress && regexCity && regexMail) {
+            
+            localStorage.setItem("contact", JSON.stringify(sendingCustomerData));  // sending "contact" object with form data to LocalStorage
 
 
             /* --- Defining an array with the list of products to send to server [o] --- */
             const sendingProductsList = [];
             for (const productInStorage of productsInStorage) {
                 sendingProductsList.push(productInStorage.sentProductId);
-            }
-            console.log("sendingProductsList", sendingProductsList);
+            };
             /* --- Defining an array with the list of products to send to server [x] --- */
 
 
             /* --- Creating an object with "contact" and "products" to send with POST [o] --- */
             const dataForServer = {
-                contact: sendingCustomerData,  // form content
-                products: sendingProductsList  // products selected
+                contact: sendingCustomerData,  // including form content
+                products: sendingProductsList  // including products selected
             };
-            console.log("dataForServer", dataForServer);
             /* --- Creating an object to send with POST [x] --- */
 
             /* --- Sending object with "contact" and "products" to server [o] --- */
             const sendingData = fetch("http://localhost:3000/api/teddies/order", {
                 method: "POST",
-                headers: { 
-            'Accept': 'application/json', 
-            'Content-Type': 'application/json' 
+                headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
             },
                 body: JSON.stringify(dataForServer)
             });
-            console.log("sendingData", sendingData)
             /* --- Sending object with "contact" and "products" to server [x] --- */
 
 
             /* --- Checking server response in console and sending order informations to LocalStorage [o] --- */
             sendingData.then(async (response) => {
                 try {
+
                     const content = await response.json();
-                    console.log('response', response);
-                    console.log('content', content);
+                    console.log('content', content);  // response from the server
 
                     /* --- Sending ID created by the server for the order with total price to LocalStorage [o] --- */
                     console.log("content.orderId", content.orderId);  // ID created by the server for the order
-
                     const orderInformations = {  // defining an object with the informations to send to cart
                         orderAmount: totalCartPrice,
                         orderId: content.orderId
                     };
-
-                    localStorage.setItem("order", JSON.stringify(orderInformations));
-                    // console.log("orderInformations", orderInformations);
+                    localStorage.setItem("order", JSON.stringify(orderInformations));  // sending the object to LocalStorage
                     /* --- Sending ID created by the server for the order with total price to LocalStorage [x] --- */
-                    
+
                     /* --- Redirect to the order confirmation page [o] --- */
                     window.location = "order.html";
                     /* --- Redirect to the order confirmation page [x] --- */
@@ -257,15 +239,19 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
             })
             /* --- Checking server response in console and sending order informations to LocalStorage [x] --- */
 
+
         } else {
-            // event.preventDefault();
-            document.querySelector("#cart-invalid").textContent = "Tous les champs ne sont pas correctement renseignés.";  // displaying a message next to the invalid field
-            // alert("Erreur dans le formulaire à corriger");
+
+            document.querySelector("#cart-invalid").textContent = "Tous les champs ne sont pas correctement renseignés.";  // displaying a message on top of the button
+
         }
-        /* --- Required conditions to accept customer form data --- */
+        /* ------ Required conditions to accept customer form data [x] ------ */
+
     });
-    /* --- Sending customer informations to LocalStorage [x] --- */
-    /* --- Cart validation [x] --- */
-    /* --------- Customer informations form [x] --------- */
-}   
+
+    /* --------- Cart and customer form validation [x] --------- */
+
+
+}
+
 /* ------------ Cart content [x] ------------ */
