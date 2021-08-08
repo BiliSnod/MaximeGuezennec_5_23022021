@@ -58,13 +58,12 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         const productInCartPrice = document.createElement("p");  // displaying product price...        
         const getProductInfo = new Request(`http://localhost:3000/api/teddies/${productInStorage.sentProductId}`);
         fetch(getProductInfo)
-        .then(response => response.json())  // converting data
-        .then(model => {
-            // console.log("model", model);
-            const getProductPrice = (model.price / 100);
-            productInCartPrice.innerHTML = `Prix : <b><i class="product-price">${getProductPrice},00&euro;</i></b>`; // displaying product price in euros
-        })
-        .catch(error => productInCartPrice.innerHTML = ""); // if problem with request
+            .then(response => response.json())  // converting data
+            .then(model => {
+                const getProductPrice = (model.price / 100); // getting price data and preparing to display amount in euros
+                productInCartPrice.innerHTML = `Prix : <b><i class="product-price">${getProductPrice},00&euro;</i></b>`; // displaying product price in euros
+            })
+            .catch(error => productInCartPrice.innerHTML = ""); // if problem with request
         productInCartPrice.setAttribute("class", "product-price");  // defining the "src" attribute with the image URL of the product in LocalStorage
         productInCart.appendChild(productInCartPrice);  // adding the element in the <article>
 
@@ -105,45 +104,40 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         for (const productInStorage of productsInStorage) {  // what to do for each of products in cart
             
             const productInStorageData = new Request(`http://localhost:3000/api/teddies/${productInStorage.sentProductId}`);  // requesting products in cart data from API
-            // console.log("productInStorageData", productInStorageData);
 
             await fetch(productInStorageData)
             .then(response => response.json())  // converting data
             .then(model => {
 
-                callback = (model.price / 100);
-                // console.log("callback", callback);
+                callback = (model.price / 100);  // getting price data and calculation from cents to euros
                 allPriceSums.push(callback);  // adding the sum to the array
-                // console.log("allPriceSums Y", allPriceSums);
+
             })
             .catch(error => console.log("error")); // if problem with request
 
         };
-        console.log("allPriceSums X", allPriceSums);
         return allPriceSums;
     };
     /* --- Getting price for each product from the API [x] --- */
 
     /* --- Calculating then displaying cart total price [o] --- */
     const listOfPrices = getCartAmounts("getProductPrice");  // function expression with a callback argument
-    // console.log("listOfPrices", listOfPrices);
 
     const displayCartPrice = async () => {
+
         const orderPrices = await listOfPrices;
-        // console.log("array", array);
+
         const totalCartPrice = orderPrices.reduce(function (accumulator, currentValue) {  // reducing the array's values to get the sum of prices
-            // console.log('currentValue.price', currentValue);
             return accumulator + currentValue;
         }, 0);  // initial value
-        // console.log('getOrderPrice', getOrderPrice);
 
         const cartDisplayTotal = document.createElement("div"); // creating a <div> tag
         cartDisplayTotal.setAttribute("id", "total-price");  // defining an ID for cart total price
         cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;  // filling the tag with the price in euros
         cartDisplayTotal.classList.add("fs-1", "text-center");  // adding a "class" attribute for styling
         cartContent.appendChild(cartDisplayTotal);  // adding the tag inside the "cart" <section> element
+
     };
-    // console.log("sumOfPrices()", sumOfPrices());
 
     displayCartPrice();  // calling the function to display cart total price
     /* --- Calculating then displaying cart total price [x] --- */
@@ -275,7 +269,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
                     /* --- Sending ID created by the server for the order to LocalStorage [x] --- */
 
                     /* --- Redirect to the order confirmation page [o] --- */
-                    // window.location = "order.html";
+                    window.location = "order.html";
                     /* --- Redirect to the order confirmation page [x] --- */
 
                 } catch (error) {

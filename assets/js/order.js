@@ -1,6 +1,5 @@
 let getOrder = JSON.parse(localStorage.getItem("order"));  // getting LocalStorage "order" object
 let getProducts = JSON.parse(localStorage.getItem("products"));  // getting LocalStorage "order" object
-// console.log("getProducts", getProducts);
 
 
 
@@ -16,7 +15,7 @@ orderTitleMain.appendChild(orderTitle);  // adding the element inside the "title
 const orderContent = document.getElementById("order");  // targeting the "order" <section> element
 
 
-if (getOrder === null) {  // if an existing order has not been found in LocalStorage
+if (getProducts === null) {  // if existing products were not been found in LocalStorage
 
     orderTitle.textContent = `Votre commande Oripeluche n'a pas été passée`;  // filling the <h1> element with order status
 
@@ -44,38 +43,32 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
         for (const getProduct of getProducts) {  // what to do for each of ordered products
             
             const getProductData = new Request(`http://localhost:3000/api/teddies/${getProduct.sentProductId}`);  // requesting ordered products data from API
-            // console.log("getProductData", getProductData);
 
             await fetch(getProductData) 
             .then(response => response.json())  // converting data
             .then(model => {
 
-                callback = (model.price / 100);
-                // console.log("callback", callback);
+                callback = (model.price / 100);  // getting price data and calculating from cents to euros
                 allPriceSums.push(callback);  // adding the sum to the array
-                // console.log("allPriceSums Y", allPriceSums);
 
             })
             .catch(error => console.log("error")); // if problem with request
 
         };
-        // console.log("allPriceSums X", allPriceSums);
         return allPriceSums;
     };
     /* --- Getting ordered products prices from API [x] --- */
 
     /* --- Calculating order total price then Displaying order informations for customer [o] --- */
     const listOfPrices = getOrderAmounts("getProductPrice");  // function expression with a callback argument
-    // console.log("listOfPrices", listOfPrices);
 
     const orderDisplay = async () => {
+
         const orderPrices = await listOfPrices;
-        // console.log("array", array);
         const getOrderPrice = orderPrices.reduce(function (accumulator, currentValue) {  // reducing the array's values to get the sum of prices
-            // console.log('currentValue.price', currentValue);
             return accumulator + currentValue;
         }, 0);  // initial value
-        // console.log('getOrderPrice', getOrderPrice);
+
         const displayOrder = document.createElement("div");  // defining a <div> tag to display order informations
         displayOrder.innerHTML =   `<p class="fs-5">Merci !</p>
                                     <p>Votre commande <i>n°${getOrderId}</i> d'un montant total de <b>${getOrderPrice},00&euro;</b> a bien été enregistrée.</p>
@@ -84,18 +77,17 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
         displayOrder.classList.add("p-4");  // adding a "class" attribute for styling
         orderContent.appendChild(displayOrder);  // adding the tag inside the <section> element
     };
-    // console.log("sumOfPrices()", sumOfPrices());
 
     orderDisplay();  // calling the function to display informations
     /* --- Calculating order total price then Displaying order informations for customer [x] --- */
 
 
-    /* --- Emptying LocalStorage [o] --- */
+    /* --- Keeping only useful data in LocalStorage [o] --- */
     function clearStorage() {
-        localStorage.clear();
+        JSON.parse(localStorage.removeItem("products"));
     };
     clearStorage();
-    /* --- Emptying LocalStorage [x] --- */
+    /* --- Keeping only useful data in LocalStorage [x] --- */
 };
 
 /* ------------ Order confirmation status [x] ------------ */
