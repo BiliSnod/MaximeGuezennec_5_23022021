@@ -134,7 +134,6 @@ fetch(`http://localhost:3000/api/teddies/${productId}`)
             const sendingProductInformations = {  // defining an object with the informations to send to cart
                 sentProductName: model.name,  // sending the product name
                 sentProductUrl: model.imageUrl,  // sending the product picture URL
-                sentProductPrice: (model.price / 100), // * selectQuantityValue,  // sending the product price
                 sentProductId: model._id,  // sending the product ID
                 sentProductVariation: selectVariationValue,  // sending the product variation option
                 sentProductQuantity: selectQuantityValue  // sending the selected quantity

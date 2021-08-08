@@ -1,4 +1,6 @@
 let getOrder = JSON.parse(localStorage.getItem("order"));  // getting LocalStorage "order" object
+let getProducts = JSON.parse(localStorage.getItem("products"));  // getting LocalStorage "order" object
+// console.log("getProducts", getProducts);
 
 
 
@@ -30,23 +32,62 @@ if (getOrder === null) {  // if an existing order has not been found in LocalSto
 
     orderTitle.textContent = `Votre commande Oripeluche est validée !`;  // filling the <h1> element with order status
 
-    /* --- Getting the order ID from LocalStorage [o] --- */
+    /* --- Getting order ID from LocalStorage [o] --- */
     const getOrderId = getOrder.orderId;
-    /* --- Getting the order ID from LocalStorage [x] --- */
+    /* --- Getting order ID from LocalStorage [x] --- */
 
-    /* --- Getting the order total price from LocalStorage [o] --- */
-    const getOrderAmount = getOrder.orderAmount;
-    /* --- Getting the order total price from LocalStorage [x] --- */
+    /* --- Getting ordered products prices from API [o] --- */
+    async function getOrderAmounts(callback) {
 
-    /* --- Displaying order informations for customer [o] --- */
-    const displayOrder = document.createElement("div");  // defining a <div> tag to display order informations
-    displayOrder.innerHTML =   `<p class="fs-5">Merci !</p>
-                                <p>Votre commande <i>n°${getOrderId}</i> d'un montant total de <b>${getOrderAmount},00&euro;</b> a bien été enregistrée.</p>
-                                <p>Vous recevrez un mail de confirmation, et serez tenu informé du suivi de votre commande.</p>
-                                <p>À bientôt sur Orinoco !</p>`;
-    displayOrder.classList.add("p-4");  // adding a "class" attribute for styling
-    orderContent.appendChild(displayOrder);  // adding the tag inside the <section> element
-    /* --- Displaying order informations for customer [x] --- */
+        let allPriceSums = [];  // creating an array to store ordered products prices
+
+        for (const getProduct of getProducts) {  // what to do for each of ordered products
+            
+            const getProductData = new Request(`http://localhost:3000/api/teddies/${getProduct.sentProductId}`);  // requesting ordered products data from API
+            // console.log("getProductData", getProductData);
+
+            await fetch(getProductData) 
+            .then(response => response.json())  // converting data
+            .then(model => {
+
+                callback = (model.price / 100);
+                // console.log("callback", callback);
+                allPriceSums.push(callback);  // adding the sum to the array
+                // console.log("allPriceSums Y", allPriceSums);
+
+            })
+            .catch(error => console.log("error")); // if problem with request
+
+        };
+        // console.log("allPriceSums X", allPriceSums);
+        return allPriceSums;
+    };
+    /* --- Getting ordered products prices from API [x] --- */
+
+    /* --- Calculating order total price then Displaying order informations for customer [o] --- */
+    const listOfPrices = getOrderAmounts("getProductPrice");  // function expression with a callback argument
+    // console.log("listOfPrices", listOfPrices);
+
+    const orderDisplay = async () => {
+        const orderPrices = await listOfPrices;
+        // console.log("array", array);
+        const getOrderPrice = orderPrices.reduce(function (accumulator, currentValue) {  // reducing the array's values to get the sum of prices
+            // console.log('currentValue.price', currentValue);
+            return accumulator + currentValue;
+        }, 0);  // initial value
+        // console.log('getOrderPrice', getOrderPrice);
+        const displayOrder = document.createElement("div");  // defining a <div> tag to display order informations
+        displayOrder.innerHTML =   `<p class="fs-5">Merci !</p>
+                                    <p>Votre commande <i>n°${getOrderId}</i> d'un montant total de <b>${getOrderPrice},00&euro;</b> a bien été enregistrée.</p>
+                                    <p>Vous recevrez un mail de confirmation, et serez tenu informé du suivi de votre commande.</p>
+                                    <p>À bientôt sur Orinoco !</p>`;
+        displayOrder.classList.add("p-4");  // adding a "class" attribute for styling
+        orderContent.appendChild(displayOrder);  // adding the tag inside the <section> element
+    };
+    // console.log("sumOfPrices()", sumOfPrices());
+
+    orderDisplay();  // calling the function to display informations
+    /* --- Calculating order total price then Displaying order informations for customer [x] --- */
 
 
     /* --- Emptying LocalStorage [o] --- */

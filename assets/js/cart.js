@@ -20,14 +20,12 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
 } else {  // displaying the products in cart with informations stored in LocalStorage
 
-    let allPriceSums = [];  // defining an array to get price for each product
-
     const listOfProducts = document.createElement("div");  // creating a <div> tag to display the products in cart
     listOfProducts.classList.add("d-flex", "flex-wrap");  // adding a "class" attribute for styling
     cartContent.appendChild(listOfProducts);  // adding the tag inside the "cart" <section> element
 
 
-    /* --------- Product in cart structure [o] --------- */
+    /* ------ Products in cart structure [o] ------ */
 
     productsInStorage.forEach(productInStorage => {  // what to do for each object of LocalStorage "products" array
 
@@ -57,14 +55,17 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
         productInCartQuantity.innerHTML = `Quantité : <b>${productInStorage.sentProductQuantity}</b>`;  // displaying quantity with value for the product in LocalStorage
         productInCart.appendChild(productInCartQuantity);  // adding the element in the <article>
 
-
-        /* --- Calculating sum of price for each product regarding to its quantity [o] --- */
-        const sumOfProductPrice = productInStorage.sentProductPrice * productInStorage.sentProductQuantity;
-        allPriceSums.push(sumOfProductPrice);  // adding the sum to the array
-        /* --- Calculating sum of price for each product regarding to its quantity [x] --- */
-
-        const productInCartPrice = document.createElement("p");  // displaying product price...
-        productInCartPrice.innerHTML = `Prix : <b><i>${sumOfProductPrice},00€</i></b>`;  // ...in euros
+        const productInCartPrice = document.createElement("p");  // displaying product price...        
+        const getProductInfo = new Request(`http://localhost:3000/api/teddies/${productInStorage.sentProductId}`);
+        fetch(getProductInfo)
+        .then(response => response.json())  // converting data
+        .then(model => {
+            // console.log("model", model);
+            const getProductPrice = (model.price / 100);
+            productInCartPrice.innerHTML = `Prix : <b><i class="product-price">${getProductPrice},00&euro;</i></b>`; // displaying product price in euros
+        })
+        .catch(error => productInCartPrice.innerHTML = ""); // if problem with request
+        productInCartPrice.setAttribute("class", "product-price");  // defining the "src" attribute with the image URL of the product in LocalStorage
         productInCart.appendChild(productInCartPrice);  // adding the element in the <article>
 
 
@@ -91,32 +92,77 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
     });
 
-    /* --------- Product in cart structure [x] --------- */
+    /* ------ Products in cart structure [x] ------ */
 
 
-    /* --- Calculating cart total price [o] --- */
-    const totalCartPrice = allPriceSums.reduce(function (accumulator, currentValue) {
-        return accumulator + currentValue;
-    }, 0);  // initial value
-    /* --- Calculating cart total price [x] --- */
+    /* ------ Cart total price [o] ------ */
+    
+    /* --- Getting price for each product from the API [o] --- */
+    async function getCartAmounts(callback) {
 
-    /* --- Displaying cart total price [o] --- */
-    const cartDisplayTotal = document.createElement("div"); // creating a <div> tag
-    cartDisplayTotal.setAttribute("id", "total-price");  // defining an ID for cart total price
-    cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;  // filling the tag with the price in euros
-    cartDisplayTotal.classList.add("fs-1", "text-center");  // adding a "class" attribute for styling
-    cartContent.appendChild(cartDisplayTotal);  // adding the tag inside the "cart" <section> element
-    /* --- Displaying cart total price [x] --- */
+        let allPriceSums = [];  // creating an array to store products in cart prices
+
+        for (const productInStorage of productsInStorage) {  // what to do for each of products in cart
+            
+            const productInStorageData = new Request(`http://localhost:3000/api/teddies/${productInStorage.sentProductId}`);  // requesting products in cart data from API
+            // console.log("productInStorageData", productInStorageData);
+
+            await fetch(productInStorageData)
+            .then(response => response.json())  // converting data
+            .then(model => {
+
+                callback = (model.price / 100);
+                // console.log("callback", callback);
+                allPriceSums.push(callback);  // adding the sum to the array
+                // console.log("allPriceSums Y", allPriceSums);
+            })
+            .catch(error => console.log("error")); // if problem with request
+
+        };
+        console.log("allPriceSums X", allPriceSums);
+        return allPriceSums;
+    };
+    /* --- Getting price for each product from the API [x] --- */
+
+    /* --- Calculating then displaying cart total price [o] --- */
+    const listOfPrices = getCartAmounts("getProductPrice");  // function expression with a callback argument
+    // console.log("listOfPrices", listOfPrices);
+
+    const displayCartPrice = async () => {
+        const orderPrices = await listOfPrices;
+        // console.log("array", array);
+        const totalCartPrice = orderPrices.reduce(function (accumulator, currentValue) {  // reducing the array's values to get the sum of prices
+            // console.log('currentValue.price', currentValue);
+            return accumulator + currentValue;
+        }, 0);  // initial value
+        // console.log('getOrderPrice', getOrderPrice);
+
+        const cartDisplayTotal = document.createElement("div"); // creating a <div> tag
+        cartDisplayTotal.setAttribute("id", "total-price");  // defining an ID for cart total price
+        cartDisplayTotal.innerHTML = `<p><em>Prix total</em> : ${totalCartPrice},00€</p>`;  // filling the tag with the price in euros
+        cartDisplayTotal.classList.add("fs-1", "text-center");  // adding a "class" attribute for styling
+        cartContent.appendChild(cartDisplayTotal);  // adding the tag inside the "cart" <section> element
+    };
+    // console.log("sumOfPrices()", sumOfPrices());
+
+    displayCartPrice();  // calling the function to display cart total price
+    /* --- Calculating then displaying cart total price [x] --- */
+
+    /* ------ Cart total price [x] ------ */
 
 
     /* --- Emptying cart [o] --- */
+    const emptyCartDiv = document.createElement("div"); // creating a <div> tag
+    emptyCartDiv.classList.add("m-4", "text-center");  // adding a "class" attribute for styling
+    cartContent.appendChild(emptyCartDiv);  // adding the button inside the <div> for cart total price
+
     const emptyCartButton = document.createElement("button"); // creating a <button> element to clear cart content
     emptyCartButton.setAttribute("id", "btn__empty-cart");  // defining an ID for the button
     emptyCartButton.setAttribute("name", "empty-cart");  // defining a "name" attribute for the button
     emptyCartButton.setAttribute("type", "button");  // defining at "type" attribute for the button
     emptyCartButton.textContent = "Supprimer tous les articles";  // filling the button with text
     emptyCartButton.classList.add("btn", "btn-success", "btn-lg", "fw-bold");  // adding a "class" attribute for styling
-    cartDisplayTotal.appendChild(emptyCartButton);  // adding the button inside the <div> for cart total price
+    emptyCartDiv.appendChild(emptyCartButton);  // adding the button inside the <div> for cart total price
 
     const emptyCart = document.querySelector("#btn__empty-cart");  // targeting the button to empty the cart
     emptyCart.addEventListener("click", (event) =>{  // what will happen on <button> click
@@ -220,17 +266,16 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
                     const content = await response.json();
                     console.log('content', content);  // response from the server
 
-                    /* --- Sending ID created by the server for the order with total price to LocalStorage [o] --- */
+                    /* --- Sending ID created by the server for the order to LocalStorage [o] --- */
                     console.log("content.orderId", content.orderId);  // ID created by the server for the order
                     const orderInformations = {  // defining an object with the informations to send to cart
-                        orderAmount: totalCartPrice,
                         orderId: content.orderId
                     };
                     localStorage.setItem("order", JSON.stringify(orderInformations));  // sending the object to LocalStorage
-                    /* --- Sending ID created by the server for the order with total price to LocalStorage [x] --- */
+                    /* --- Sending ID created by the server for the order to LocalStorage [x] --- */
 
                     /* --- Redirect to the order confirmation page [o] --- */
-                    window.location = "order.html";
+                    // window.location = "order.html";
                     /* --- Redirect to the order confirmation page [x] --- */
 
                 } catch (error) {
