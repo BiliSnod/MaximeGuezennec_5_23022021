@@ -160,7 +160,7 @@ if (productsInStorage === null) {  // displaying a message if LocalStorage is em
 
     const emptyCart = document.querySelector("#btn__empty-cart");  // targeting the button to empty the cart
     emptyCart.addEventListener("click", (event) =>{  // what will happen on <button> click
-        localStorage.clear();  // deleting all entries of LocalStorage
+        JSON.parse(localStorage.removeItem("products"));
         window.alert("Le panier est désormais vide.");  // displaying an alert box
         location.reload();  // reloading the page
     });
